@@ -1,0 +1,7 @@
+
+data: [scope: [
+   if: [
+    equal: [get: ["a",2,3],true],
+    equal: []
+   ]
+]]
