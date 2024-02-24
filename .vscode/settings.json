@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "cjson.h": "c"
+        "cjson.h": "c",
+        "cstdlib": "c"
     }
 }
