@@ -6,3 +6,5 @@
 #endif 
 
 #include "io/io.c"
+#include "parsment/parsment.c"
+#include "retriver/retriver.c"
