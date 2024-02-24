@@ -9,4 +9,6 @@
 #include "dependencies/cJSON.h"
 #undef cJSON__h
 #endif 
+typedef cJSON cjson_path;
+
 #include "io/io.h"
