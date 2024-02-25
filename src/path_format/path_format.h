@@ -1,4 +1,5 @@
 
-int private_cjson_path_validate_path(cJSON *path);
+int private_cxpathjson_validate_path(cJSON *path);
 
-void private_cjson_path_replace_comas( char *result);
+
+void private_cxpathjson_replace_comas(char *result);

@@ -2,7 +2,7 @@
 
 
 
-char *privatecjson_path_read_file(const char *filename) {
+char *private_cxpathjson_read_file(const char *filename) {
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {
@@ -23,7 +23,7 @@ char *privatecjson_path_read_file(const char *filename) {
     return buffer;
 }
 
-int  private_cjson_path_write_file(const char *filename, const char *value) {
+int  private_cxpathjson_write_file(const char *filename, const char *value) {
 
     FILE *file = fopen(filename, "w");
 

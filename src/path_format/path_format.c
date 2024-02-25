@@ -1,4 +1,4 @@
-int private_cjson_path_validate_path(cJSON *path){
+int private_cxpathjson_validate_path(cJSON *path){
 
     if(!path){
         return 1;
@@ -26,7 +26,7 @@ int private_cjson_path_validate_path(cJSON *path){
 
 }
 
-void private_cjson_path_replace_comas( char *result){
+void private_cxpathjson_replace_comas(char *result){
     long size = strlen(result);
     for(int i =1; i < size; i++){
         char current_char = result[i];
