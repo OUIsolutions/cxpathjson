@@ -1,5 +1,7 @@
 
 
+cJSON * private_cjson_path_get_cJSON_by_cjson_path_list(int *error_code,cJSON *element,cJSON *path_list);
+
 
 cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code,cJSON *element, const char *format, va_list args);
 
