@@ -17,33 +17,44 @@ int private_cjson_path_verifiy_if_insertion_is_possible(cJSON *element,cJSON *pa
             return  CJSON_PATH_OK;
         }
 
+        cJSON *current_path = cJSON_GetArrayItem(path_list,i);
         bool current_its_object = cJSON_IsObject(current_element);
-        bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
+        bool current_is_an_array = cJSON_IsArray(current_element);
+        bool current_its_iterable = cJSON_IsArray(current_element) || current_its_object;
 
-        if(!current_its_terable){
+        bool is_append = false;
+        if(cJSON_IsString(current_path)){
+             is_append = strcmp(current_path->valuestring,CJSON_PATH_APPEND_KEY) == 0;
+        }
+
+        bool path_must_be_an_object = cJSON_IsString(current_path) && !is_append;
+        bool path_must_be_an_array = cJSON_IsNumber(current_path) || is_append;
+
+
+        if(current_its_iterable == false) {
             return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
         }
 
-        cJSON *current_path = cJSON_GetArrayItem(path_list,i);
-
-        if(cJSON_IsString(current_path) && !current_its_object){
+        if(path_must_be_an_object && current_its_object == false){
             return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
         }
+        if(path_must_be_an_array && current_is_an_array == false){
+            return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ARRAY;
+        }
 
-
-        if(cJSON_IsString(current_path)){
-            current_element = cJSON_GetObjectItem(current_element,current_path->valuestring);
+        if(current_its_object){
+            const char *key = current_path->valuestring;
+            current_element = cJSON_GetObjectItem(current_element,key);
         }
 
 
-        if(cJSON_IsNumber(current_path)){
+        if(current_is_an_array){
             int index = private_cjson_path_convert_index(
                     current_path->valueint,
                     cJSON_GetArraySize(current_element)
                     );
             current_element = cJSON_GetArrayItem(current_element,index);
         }
-
     }
 
     return CJSON_PATH_OK;

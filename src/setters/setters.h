@@ -1,3 +1,6 @@
+#ifndef CJSON_PATH_APPEND_KEY
+#define CJSON_PATH_APPEND_KEY "$append"
+#endif
 
 int private_cjson_path_verifiy_if_insertion_is_possible(cJSON *element,cJSON *path_list);
 
