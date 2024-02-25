@@ -14,7 +14,7 @@ cJSON * cjson_path_load_from_file( int *error_code,const char *path){
         return NULL;
     }
 
-    cJSON *result = cjson_path_load_from_string(content);
+    cJSON *result = cjson_path_load_from_string(error_code,content);
     free(content);
     return result;
 }

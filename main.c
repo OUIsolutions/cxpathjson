@@ -3,16 +3,16 @@
 
 int  main(){
     
-    
-    cJSON *t = cjson_path_load_from_file("teste.json");
-    if(cjson_path_error()){
-        printf("%s",cjson_path_get_error_message());
+    int error = 0;
+    cJSON *t = cjson_path_load_from_file(&error,"teste.json");
+    if(error){
+        printf("%d",error);
         return 1;
     }
 
-    const char *a = cjson_path_get_str(t,"[\"a\"]");
-    if(cjson_path_error()){
-        printf("%s",cjson_path_get_error_message());
+    const char *a = cjson_path_get_str(&error,t,"[\"a\"]");
+    if(error){
+        printf("%d",error);
         return 1;
     }
 
