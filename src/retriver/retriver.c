@@ -31,7 +31,12 @@ cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, c
 
 
         if(cJSON_IsNumber(current_path)){
-            current_element = cJSON_GetArrayItem(current_element,current_path->valueint);
+            int index = current_path->valueint;
+            if(index < 0){
+                int current_element_size = cJSON_GetArraySize(current_element);
+                index = (current_element_size + index);
+            }
+            current_element = cJSON_GetArrayItem(current_element,index);
         }
 
 
