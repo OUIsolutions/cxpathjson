@@ -23,16 +23,16 @@ char *privatecjson_path_read_file(const char *filename) {
     return buffer;
 }
 
-int  privatecjson_path_write_file(const char *filename, const char *value) {
+int  private_cjson_path_write_file(const char *filename, const char *value) {
 
     FILE *file = fopen(filename, "w");
 
     if (file == NULL) {
-        return 1;
+        return CJSON_PATH_IO_PROBLEM;
     }
     fputs(value, file);
 
     fclose(file);
-    return 0;
+    return CJSON_PATH_OK;
 }
 
