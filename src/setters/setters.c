@@ -22,11 +22,7 @@ int private_cjson_path_verifiy_if_insertion_is_possible(cJSON *element,cJSON *pa
         bool current_is_an_array = cJSON_IsArray(current_element);
         bool current_its_iterable = cJSON_IsArray(current_element) || current_its_object;
 
-        bool is_append = false;
-        if(cJSON_IsString(current_path)){
-             is_append = strcmp(current_path->valuestring,CJSON_PATH_APPEND_KEY) == 0;
-        }
-
+        bool is_append = private_cjson_path_is_append(current_path);
         bool path_must_be_an_object = cJSON_IsString(current_path) && !is_append;
         bool path_must_be_an_array = cJSON_IsNumber(current_path) || is_append;
 
@@ -75,13 +71,19 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
 
         cJSON *current_path = cJSON_GetArrayItem(path_list,i);
 
-        cJSON *possible_current_element = NULL;
 
-        if(cJSON_IsString(current_path)){
+        bool is_append = private_cjson_path_is_append(current_path);
+        bool path_must_be_an_object = cJSON_IsString(current_path) && !is_append;
+        bool path_must_be_an_array = cJSON_IsNumber(current_path) || is_append;
+
+
+        cJSON *possible_current_element = NULL;
+        if(path_must_be_an_object){
             possible_current_element = cJSON_GetObjectItem(current_element,current_path->valuestring);
         }
 
-        if(cJSON_IsNumber(current_path)){
+
+        if(path_must_be_an_array){
             int index = private_cjson_path_convert_index(
                     current_path->valueint,
                     cJSON_GetArraySize(current_element)
@@ -89,17 +91,17 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
             possible_current_element = cJSON_GetArrayItem(current_element,index);
         }
 
+
         if(possible_current_element){
             current_element = possible_current_element;
             continue;
         }
 
-        //here means current were not finded
-
-
         cJSON *created_element  = NULL;
 
         cJSON *next_path = cJSON_GetArrayItem(path_list,i+1);
+
+
         if(cJSON_IsString(next_path)){
             created_element = cJSON_CreateObject();
         }
