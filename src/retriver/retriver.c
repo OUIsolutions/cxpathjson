@@ -22,8 +22,23 @@ cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, c
             *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
             return  NULL;
         }
+        bool current_its_object = cJSON_IsObject(current_element);
+        bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
+
+        if(!current_its_terable){
+            cJSON_Delete(parsed_path);
+            *error_code = CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
+            return  NULL;
+        }
 
         cJSON *current_path = cJSON_GetArrayItem(parsed_path,i);
+
+        if(cJSON_IsString(current_path) && !current_its_object){
+            cJSON_Delete(parsed_path);
+            *error_code = CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
+            return  NULL;
+        }
+
 
         if(cJSON_IsString(current_path)){
             current_element = cJSON_GetObjectItem(current_element,current_path->valuestring);
@@ -158,6 +173,7 @@ int cjson_path_type(cJSON *element,const char *format,...){
     if(cJSON_IsArray(result)){
         return CJSON_PATH_ARRAY;
     }
+    return CJSON_PATH_INVALID;
 
 }
 
