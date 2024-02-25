@@ -1,49 +1,32 @@
 
-
-
-int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const char *format, va_list args){
-    char buffer[2000] = {0};
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    private_cjson_path_replace_comas(buffer);
-    cJSON *parsed_path  = cJSON_Parse(buffer);
-
-    if(private_cjson_path_validate_path(parsed_path)){
-        cJSON_Delete(parsed_path);
-        return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
-    }
+int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON *path_list) {
 
     cJSON *current_element = element;
-    int path_size = cJSON_GetArraySize(parsed_path);
+    int path_size = cJSON_GetArraySize(path_list);
     if(path_size == 0){
-        cJSON_Delete(parsed_path);
         return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
     }
 
     if(!current_element){
-        cJSON_Delete(parsed_path);
         return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
     }
 
-
     for(int i = 0;i <path_size-1;i++){
 
-
         if(!current_element){
-            cJSON_Delete(parsed_path);
             return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
         }
+        
         bool current_its_object = cJSON_IsObject(current_element);
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
         if(!current_its_terable){
-            cJSON_Delete(parsed_path);
             return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
         }
 
-        cJSON *current_path = cJSON_GetArrayItem(parsed_path,i);
+        cJSON *current_path = cJSON_GetArrayItem(path_list,i);
 
         if(cJSON_IsString(current_path) && !current_its_object){
-            cJSON_Delete(parsed_path);
             return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
         }
 
@@ -73,7 +56,7 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
 
         cJSON *created_element  = NULL;
 
-        cJSON *next_path = cJSON_GetArrayItem(parsed_path,i+1);
+        cJSON *next_path = cJSON_GetArrayItem(path_list,i+1);
         if(cJSON_IsString(next_path)){
             created_element = cJSON_CreateObject();
         }
@@ -95,7 +78,6 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
     }
 
     if(!current_element){
-        cJSON_Delete(parsed_path);
         return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
     }
 
@@ -103,14 +85,12 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
     bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
     if(!current_its_terable){
-        cJSON_Delete(parsed_path);
         return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
     }
 
-    cJSON *last_path = cJSON_GetArrayItem(parsed_path,path_size-1);
+    cJSON *last_path = cJSON_GetArrayItem(path_list,path_size-1);
 
     if(cJSON_IsString(last_path) && !current_its_object){
-        cJSON_Delete(parsed_path);
         return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
     }
 
@@ -136,14 +116,26 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
             cJSON_AddItemToArray(current_element,value);
         }
 
-
-
     }
 
-
-    cJSON_Delete(parsed_path);
     return CJSON_PATH_OK;
 }
+
+int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const char *format, va_list args){
+    char buffer[2000] = {0};
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    private_cjson_path_replace_comas(buffer);
+    cJSON *parsed_path  = cJSON_Parse(buffer);
+
+    if(private_cjson_path_validate_path(parsed_path)){
+        cJSON_Delete(parsed_path);
+        return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
+    }
+    int result = private_cjson_path_set_cjson_by_path_list(element,value,parsed_path);
+    cJSON_Delete(parsed_path);
+    return  result;
+}
+
 
 int cjson_path_set_cjson(cJSON *element,cJSON *value,const char *format,...){
     va_list args;
