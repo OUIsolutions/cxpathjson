@@ -30,10 +30,11 @@ cJSON * private_cjson_path_get_cJSON_by_cjson_path_list(int *error_code,cJSON *e
 
 
         if(cJSON_IsNumber(current_path)){
-            int index = private_cjson_path_convert_index(current_path->valueint,cJSON_GetArraySize(current_element));
+            int index = private_cjson_path_convert_index(
+                    current_path->valueint,
+                    cJSON_GetArraySize(current_element));
             current_element = cJSON_GetArrayItem(current_element,index);
         }
-
 
     }
     if(!current_element){

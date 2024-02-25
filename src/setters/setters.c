@@ -6,7 +6,6 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
     if(path_size == 0){
         return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
     }
-
     if(!current_element){
         return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
     }
@@ -37,11 +36,10 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
         }
 
         if(cJSON_IsNumber(current_path)){
-            int index = current_path->valueint;
-            if(index < 0){
-                int current_element_size = cJSON_GetArraySize(current_element);
-                index = (current_element_size + index);
-            }
+            int index = private_cjson_path_convert_index(
+                    current_path->valueint,
+                    cJSON_GetArraySize(current_element)
+                    );
             possible_current_element = cJSON_GetArrayItem(current_element,index);
         }
 
@@ -104,11 +102,13 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
     }
 
     if(cJSON_IsNumber(last_path)){
-        int index = private_cjson_path_convert_index(last_path->valueint,cJSON_GetArraySize(current_element));
-        if(index > path_size){
+        int index = private_cjson_path_convert_index(
+                last_path->valueint,
+                cJSON_GetArraySize(current_element)
+        );
+        if(index >= path_size){
             cJSON_AddItemToArray(current_element,value);
         }
-
     }
 
     return CJSON_PATH_OK;
