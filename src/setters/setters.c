@@ -1,19 +1,20 @@
 
-int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON *path_list) {
-
-    cJSON *current_element = element;
+int private_cjson_path_verifiy_if_insertion_is_possible(cJSON *element,cJSON *path_list){
+    if(!element){
+        return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
+    }
     int path_size = cJSON_GetArraySize(path_list);
+
     if(path_size == 0){
         return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
     }
-    if(!current_element){
-        return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
-    }
 
-    for(int i = 0;i <path_size-1;i++){
+    cJSON *current_element = element;
+    for(int i = 0;i <path_size;i++){
+
 
         if(!current_element){
-            return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
+            return  CJSON_PATH_OK;
         }
 
         bool current_its_object = cJSON_IsObject(current_element);
@@ -29,6 +30,40 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
             return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
         }
 
+
+        if(cJSON_IsString(current_path)){
+            current_element = cJSON_GetObjectItem(current_element,current_path->valuestring);
+        }
+
+
+        if(cJSON_IsNumber(current_path)){
+            int index = private_cjson_path_convert_index(
+                    current_path->valueint,
+                    cJSON_GetArraySize(current_element)
+                    );
+            current_element = cJSON_GetArrayItem(current_element,index);
+        }
+
+    }
+
+    return CJSON_PATH_OK;
+
+
+}
+int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON *path_list) {
+
+    cJSON *current_element = element;
+
+    int error  =private_cjson_path_verifiy_if_insertion_is_possible(element,path_list);
+    if(error){
+        return  error;
+    }
+    int path_size = cJSON_GetArraySize(path_list);
+
+    for(int i = 0;i <path_size-1;i++){
+
+        cJSON *current_path = cJSON_GetArrayItem(path_list,i);
+
         cJSON *possible_current_element = NULL;
 
         if(cJSON_IsString(current_path)){
@@ -42,7 +77,6 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
                     );
             possible_current_element = cJSON_GetArrayItem(current_element,index);
         }
-
 
         if(possible_current_element){
             current_element = possible_current_element;
@@ -75,28 +109,16 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
 
     }
 
-    if(!current_element){
-        return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
-    }
-
-    bool current_its_object = cJSON_IsObject(current_element);
-    bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
-
-    if(!current_its_terable){
-        return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
-    }
 
     cJSON *last_path = cJSON_GetArrayItem(path_list,path_size-1);
 
-    if(cJSON_IsString(last_path) && !current_its_object){
-        return  CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
-    }
 
     if(cJSON_IsString(last_path)){
         cJSON *already_exist  = cJSON_GetObjectItem(current_element,last_path->valuestring);
         if(already_exist){
             cJSON_DeleteItemFromObject(current_element,last_path->valuestring);
         }
+
 
         cJSON_AddItemToObject(current_element,last_path->valuestring,value);
     }
@@ -106,9 +128,14 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
                 last_path->valueint,
                 cJSON_GetArraySize(current_element)
         );
+
         if(index >= path_size){
             cJSON_AddItemToArray(current_element,value);
         }
+        else{
+            cJSON_ReplaceItemInArray(current_element,index,value);
+        }
+
     }
 
     return CJSON_PATH_OK;

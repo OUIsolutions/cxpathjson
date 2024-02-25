@@ -1,4 +1,6 @@
 
+int private_cjson_path_verifiy_if_insertion_is_possible(cJSON *element,cJSON *path_list);
+
 int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON *path_list);
 
 
