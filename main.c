@@ -4,8 +4,10 @@
 int  main(){
     
     
-    cjson_path * t = cjson_path_load_from_file("teste.json");
-    cjson_path *r  = cjson_path_get_cJSON(t, "[%d][aaa]", 1);
+    cJSON *t = cjson_path_load_from_file("teste.json");
+    const char *a = cjson_path_get_str(t,"[\"a\"]");
+    printf("%s\n",a);
+
     cjson_path_free(t);
 
 

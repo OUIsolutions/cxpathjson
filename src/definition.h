@@ -7,4 +7,5 @@
 
 #include "io/io.c"
 #include "parsment/parsment.c"
+#include "error/error.c"
 #include "retriver/retriver.c"
