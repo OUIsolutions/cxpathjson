@@ -32,6 +32,7 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
             possible_current_element = cJSON_GetObjectItem(current_element,current_path->valuestring);
         }
 
+
         if(cJSON_IsNumber(current_path)){
             int index = current_path->valueint;
             if(index < 0){
@@ -48,7 +49,8 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
         }
         //here means current were not finded
 
-        cJSON *next_path = cJSON_GetArrayItem(current_path,i+1);
+        cJSON *next_path = cJSON_GetArrayItem(parsed_path,i+1);
+
         cJSON *created_element  = NULL;
 
         if(cJSON_IsString(next_path)){
@@ -66,7 +68,7 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
         if(cJSON_IsNumber(current_path)){
             cJSON_AddItemToArray(current_element,created_element);
         }
-
+        current_element = created_element;
 
     }
 

@@ -18,15 +18,15 @@ cJSON * cjson_path_load_from_file( int *error_code,const char *path){
     free(content);
     return result;
 }
-char *cjson_path_dump_to_string(cJSON *element,bool format){
-    if(format){
+char *cjson_path_dump_to_string(cJSON *element,bool ident){
+    if(ident){
         return cJSON_Print(element);
     }
     return cJSON_PrintUnformatted(element);
 }
 
-int cjson_path_dump_to_file(const char *filename,cJSON *element,bool format){
-    char *result = cjson_path_dump_to_string(element,format);
+int cjson_path_dump_to_file(const char *filename,cJSON *element,bool ident){
+    char *result = cjson_path_dump_to_string(element, ident);
     if(!result){
         return  CJSON_PATH_PRINT_PROBLEM;
     }
