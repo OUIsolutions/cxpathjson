@@ -16,7 +16,7 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
         if(!current_element){
             return  CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
         }
-        
+
         bool current_its_object = cJSON_IsObject(current_element);
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
@@ -104,14 +104,7 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
     }
 
     if(cJSON_IsNumber(last_path)){
-
-        int index = last_path->valueint;
-        if(index < 0){
-            int current_element_size = cJSON_GetArraySize(current_element);
-            index = (current_element_size + index);
-        }
-        //printf("index:%d\n",index);
-
+        int index = private_cjson_path_convert_index(last_path->valueint,cJSON_GetArraySize(current_element));
         if(index > path_size){
             cJSON_AddItemToArray(current_element,value);
         }
@@ -122,6 +115,7 @@ int private_cjson_path_set_cjson_by_path_list(cJSON *element,cJSON *value,cJSON 
 }
 
 int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const char *format, va_list args){
+
     char buffer[2000] = {0};
     vsnprintf(buffer, sizeof(buffer), format, args);
     private_cjson_path_replace_comas(buffer);
@@ -131,9 +125,11 @@ int private_cjson_path_set_cjson_by_va_arg(cJSON *element,cJSON *value,const cha
         cJSON_Delete(parsed_path);
         return  CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
     }
+
     int result = private_cjson_path_set_cjson_by_path_list(element,value,parsed_path);
     cJSON_Delete(parsed_path);
     return  result;
+
 }
 
 
