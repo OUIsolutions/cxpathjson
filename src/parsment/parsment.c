@@ -1,18 +1,16 @@
 
-cJSON * cjson_path_load_from_string(const char *data){
+cJSON * cjson_path_load_from_string( int *error_code,const char *data){
     cJSON  *result = cJSON_Parse(data);
     if(!result){
-        private_cjson_path_error_code = CJSON_PATH_DOCUMENT_NOT_PARSABLE_CODE;
-        private_cjson_path_error_message = CJSON_PATH_DOCUMENT_NOT_PARSABLE_MESSAGE;
+        *error_code = CJSON_PATH_DOCUMENT_NOT_PARSABLE_CODE;
     }
     return  result;
 }
 
-cJSON * cjson_path_load_from_file(const char *filename){
-    char *content = privatecjson_path_read_file(filename);
+cJSON * cjson_path_load_from_file( int *error_code,const char *path){
+    char *content = privatecjson_path_read_file(path);
     if(!content){
-        private_cjson_path_error_code = CJSON_PATH_DOCUMENT_NOT_EXIST_CODE;
-        private_cjson_path_error_message = CJSON_PATH_DOCUMENT_NOT_EXIST_MESSAGE;
+        *error_code  = CJSON_PATH_DOCUMENT_NOT_EXIST_CODE;
         return NULL;
     }
 

@@ -11,7 +11,6 @@
 #endif 
 
 #include "io/io.h"
-#include "globals.h"
 #include "parsment/parsment.h"
-#include "error/error.h"
+#include "error.h"
 #include "retriver/retriver.h"

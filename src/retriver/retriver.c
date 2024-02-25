@@ -14,6 +14,7 @@ int private_cjson_path_validate_path(cJSON *path){
         if(cJSON_IsString(current)){
             continue;
         }
+
         if(cJSON_IsNumber(current)){
             continue;
         }
@@ -24,21 +25,26 @@ int private_cjson_path_validate_path(cJSON *path){
 
 
 }
-cJSON * cjson_path_get_cJSON_by_vargs(cJSON *element, const char *format, va_list args){
+
+
+cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, const char *format, va_list args){
     int size = vsnprintf(NULL, 0, format, args);
     char *buffer = (char *)malloc(size + 1);
     vsnprintf(buffer, size + 1, format, args);
     cJSON *parsed_path  = cJSON_Parse(buffer);
     free(buffer);
     if(private_cjson_path_validate_path(parsed_path)){
+        *error_code = CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
         cJSON_Delete(parsed_path);
         return  NULL;
     }
+
     cJSON *current_element = element;
     int path_size = cJSON_GetArraySize(parsed_path);
     for(int i = 0;i <path_size;i++){
 
         if(!current_element){
+            *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
             cJSON_Delete(parsed_path);
             return  NULL;
         }
@@ -61,23 +67,27 @@ cJSON * cjson_path_get_cJSON_by_vargs(cJSON *element, const char *format, va_lis
     return current_element;
 }
 
-cJSON *cjson_path_get_cJSON(cJSON *element, const char *format, ...) {
+
+cJSON *cjson_path_get_cJSON(int *error_code,cJSON *element, const char *format, ...) {
     va_list args;
     va_start(args, format);
-    cJSON *result = cjson_path_get_cJSON_by_vargs(element,format,args);
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code, element,format, args);
     va_end(args);
     return  result;
 
 }
 
-const char * cjson_path_get_str(cJSON *element,const char *format, ...){
+const char * cjson_path_get_str(int *error_code,cJSON *element,const char *format, ...){
     va_list args;
     va_start(args, format);
-    cJSON *result = cjson_path_get_cJSON_by_vargs(element,format,args);
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code,element, format, args);
     va_end(args);
-    if(result){
-        return  result->valuestring;
+    if(*error_code){
+        return  NULL;
     }
-
-    return  NULL;
+    if(!cJSON_IsString(result)){
+        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        return  NULL;
+    }
+    return  result->valuestring;
 }
