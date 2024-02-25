@@ -5,18 +5,11 @@ int  main(){
     
     int error = 0;
     cJSON *t = cjson_path_load_from_file(&error,"teste.json");
+    int size = cjson_path_size(&error,t, "['a','b']");
     if(error){
-        printf("error code:%d",error);
-        return 1;
+        printf("error code %d\n",error);
     }
-
-    const char *a = cjson_path_get_str(&error,t,"['a','%s']","b");
-    if(error){
-        printf("error code:%d",error);
-        return 1;
-    }
-
-    printf("%s\n",a);
+    printf("%d",size);
 
     cjson_path_free(t);
 
