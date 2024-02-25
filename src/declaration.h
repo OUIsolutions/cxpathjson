@@ -9,6 +9,8 @@
 #include "dependencies/cJSON.h"
 #undef cJSON__h
 #endif 
+#include "cxpathjson/declaration.h"
+#include "cxpathjson/definition.h"
 
 #include "io/io.h"
 #include "extra/extra.h"
