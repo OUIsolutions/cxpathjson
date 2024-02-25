@@ -53,7 +53,6 @@ cJSON *cjson_path_get_cJSON(int *error_code,cJSON *element, const char *format, 
     cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code, element,format, args);
     va_end(args);
     return  result;
-
 }
 
 const char * cjson_path_get_str(int *error_code,cJSON *element,const char *format, ...){
@@ -69,4 +68,49 @@ const char * cjson_path_get_str(int *error_code,cJSON *element,const char *forma
         return  NULL;
     }
     return  result->valuestring;
+}
+
+double cjson_path_get_double(int *error_code,cJSON *element,const char *format, ...){
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code,element, format, args);
+    va_end(args);
+    if(*error_code){
+        return  -1;
+    }
+    if(!cJSON_IsNumber(result)){
+        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        return  -1;
+    }
+    return  result->valuedouble;
+}
+
+int cjson_path_get_int(int *error_code,cJSON *element,const char *format, ...){
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code,element, format, args);
+    va_end(args);
+    if(*error_code){
+        return  -1;
+    }
+    if(!cJSON_IsNumber(result)){
+        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        return  -1;
+    }
+    return  result->valueint;
+}
+
+bool cjson_path_get_bool(int *error_code,cJSON *element,const char *format, ...){
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(error_code,element, format, args);
+    va_end(args);
+    if(*error_code){
+        return  -1;
+    }
+    if(!cJSON_IsBool(result)){
+        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        return  -1;
+    }
+    return  (bool)result->valueint;
 }
