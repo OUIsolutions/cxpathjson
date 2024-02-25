@@ -44,7 +44,9 @@ cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, c
     for(int i = 0;i <path_size;i++){
 
         if(!current_element){
-            break;
+            cJSON_Delete(parsed_path);
+            *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
+            return  NULL;
         }
 
         cJSON *current_path = cJSON_GetArrayItem(parsed_path,i);
@@ -60,13 +62,13 @@ cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, c
 
 
     }
-
-    cJSON_Delete(parsed_path);
-
     if(!current_element){
+        cJSON_Delete(parsed_path);
         *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
         return  NULL;
     }
+
+    cJSON_Delete(parsed_path);
     return current_element;
 }
 
@@ -90,7 +92,6 @@ const char * cjson_path_get_str(int *error_code,cJSON *element,const char *forma
     }
     if(!cJSON_IsString(result)){
         *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
-
         return  NULL;
     }
     return  result->valuestring;
