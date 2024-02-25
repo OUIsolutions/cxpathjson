@@ -6,5 +6,6 @@
 #endif 
 
 #include "io/io.c"
+#include "path_format/path_format.c"
 #include "parsment/parsment.c"
 #include "retriver/retriver.c"

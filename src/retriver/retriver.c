@@ -1,38 +1,12 @@
-int private_cjson_path_validate_path(cJSON *path){
 
-    if(!path){
-        return 1;
-    }
-
-    if(!cJSON_IsArray(path)){
-        return 1;
-    }
-
-    int path_size = cJSON_GetArraySize(path);
-    for(int i = 0;i <path_size;i++){
-        cJSON *current = cJSON_GetArrayItem(path,i);
-        if(cJSON_IsString(current)){
-            continue;
-        }
-
-        if(cJSON_IsNumber(current)){
-            continue;
-        }
-        return  1;
-    }
-    return  0;
-
-
-
-}
 
 
 cJSON * private_cjson_path_get_cJSON_by_vargs(int *error_code, cJSON *element, const char *format, va_list args){
-    int size = vsnprintf(NULL, 0, format, args);
-    char *buffer = (char *)malloc(size + 1);
-    vsnprintf(buffer, size + 1, format, args);
+    char buffer[2000] = {0};
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    private_cjson_path_replace_comas(buffer);
     cJSON *parsed_path  = cJSON_Parse(buffer);
-    free(buffer);
+
     if(private_cjson_path_validate_path(parsed_path)){
         *error_code = CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
         cJSON_Delete(parsed_path);

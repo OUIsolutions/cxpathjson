@@ -10,7 +10,7 @@ int  main(){
         return 1;
     }
 
-    const char *a = cjson_path_get_str(&error,t,R"(["a","b"])");
+    const char *a = cjson_path_get_str(&error,t,"['a','%s']","b");
     if(error){
         printf("error code:%d",error);
         return 1;
