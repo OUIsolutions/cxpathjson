@@ -5,12 +5,9 @@ int  main(){
     
     int error = 0;
     cJSON *t = cjson_path_load_from_file(&error,"teste.json");
-    const char *r = cjson_path_get_str(&error,t,"['a','b']");
-    printf("error %d\n",error);
-    if(!error){
-        printf("%s\n",r);
-
-    }
+    int result = cjson_path_set_str(t,"aaaaaaa","['a',-1,'c']");
+    printf("result: %d\n",result);
+    cjson_path_dump_to_file("a.json",t,true);
     cjson_path_free(t);
 
 
