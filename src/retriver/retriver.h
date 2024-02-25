@@ -14,3 +14,4 @@ int cjson_path_get_int(int *error_code,cJSON *element,const char *format, ...);
 
 bool cjson_path_get_bool(int *error_code,cJSON *element,const char *format, ...);
 
+int cjson_path_type(cJSON *element,const char *format, ...);

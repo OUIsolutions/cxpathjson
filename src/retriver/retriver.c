@@ -114,3 +114,34 @@ bool cjson_path_get_bool(int *error_code,cJSON *element,const char *format, ...)
     }
     return  (bool)result->valueint;
 }
+int cjson_path_type(cJSON *element,const char *format,...){
+    va_list args;
+    va_start(args, format);
+    int error_code;
+    cJSON *result = private_cjson_path_get_cJSON_by_vargs(&error_code,element, format, args);
+    va_end(args);
+    if(error_code){
+        return CJSON_PATH_INVALID;
+    }
+
+    if(cJSON_IsNull(result)){
+        return CJSON_PATH_NULL;
+    }
+
+    if(cJSON_IsBool(result)){
+        return CJSON_PATH_BOOL;
+    }
+
+    if(cJSON_IsString(result)){
+        return CJSON_PATH_STRING;
+    }
+    
+    if(cJSON_IsObject(result)){
+        return CJSON_PATH_OBJECT;
+    }
+
+    if(cJSON_IsArray(result)){
+        return CJSON_PATH_ARRAY;
+    }
+
+}
