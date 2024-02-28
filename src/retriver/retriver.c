@@ -12,14 +12,14 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list(int *error_code, cJSON *elem
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
         if(!current_its_terable){
-            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
+            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_COD;
             return  NULL;
         }
 
         cJSON *current_path = cJSON_GetArrayItem(path_list,i);
 
         if(cJSON_IsString(current_path) && !current_its_object){
-            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
+            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE;
             return  NULL;
         }
 
@@ -80,7 +80,7 @@ const char * cxpathjson_get_str(int *error_code, cJSON *element, const char *for
         return  NULL;
     }
     if(!cJSON_IsString(result)){
-        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE;
         return  NULL;
     }
     return  result->valuestring;
@@ -95,7 +95,7 @@ double cxpathjson_get_double(int *error_code, cJSON *element, const char *format
         return  -1;
     }
     if(!cJSON_IsNumber(result)){
-        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE;
         return  -1;
     }
     return  result->valuedouble;
@@ -110,7 +110,7 @@ int cxpathjson_get_int(int *error_code, cJSON *element, const char *format, ...)
         return  -1;
     }
     if(!cJSON_IsNumber(result)){
-        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE;
         return  -1;
     }
     return  result->valueint;
@@ -125,7 +125,7 @@ bool cxpathjson_get_bool(int *error_code, cJSON *element, const char *format, ..
         return  -1;
     }
     if(!cJSON_IsBool(result)){
-        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE;
         return  -1;
     }
     return  (bool)result->valueint;
@@ -182,7 +182,7 @@ int cxpathjson_size(int *error_code, cJSON *element, const char *format, ...){
         return  -1;
     }
     if(!cJSON_IsArray(result) && !cJSON_IsObject(result)){
-        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE;
         return  -1;
     }
 

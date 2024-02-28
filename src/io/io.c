@@ -28,11 +28,11 @@ int  private_cxpathjson_write_file(const char *filename, const char *value) {
     FILE *file = fopen(filename, "w");
 
     if (file == NULL) {
-        return CXPATHJSON_IO_PROBLEM;
+        return CXPATHJSON_IO_PROBLEM_CODE;
     }
     fputs(value, file);
 
     fclose(file);
-    return CXPATHJSON_OK;
+    return CXPATHJSON_OK_CODE;
 }
 

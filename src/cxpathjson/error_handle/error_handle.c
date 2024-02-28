@@ -21,5 +21,5 @@ void newCxpathJson_clear_errors(CxpathJson * self){
     if(self->error_path){
         free(self->error_path);
     }
-    self->error_code = CXPATHJSON_OK;
+    self->error_code = CXPATHJSON_OK_CODE;
 }

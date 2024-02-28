@@ -14,7 +14,7 @@ int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *p
 
 
         if(!current_element){
-            return  CXPATHJSON_OK;
+            return  CXPATHJSON_OK_CODE;
         }
 
         cJSON *current_path = cJSON_GetArrayItem(path_list,i);
@@ -28,14 +28,14 @@ int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *p
 
 
         if(current_its_iterable == false) {
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
+            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_COD;
         }
 
         if(path_must_be_an_object && current_its_object == false){
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
+            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE;
         }
         if(path_must_be_an_array && current_is_an_array == false){
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY;
+            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE;
         }
 
         if(current_its_object){
@@ -53,7 +53,7 @@ int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *p
         }
     }
 
-    return CXPATHJSON_OK;
+    return CXPATHJSON_OK_CODE;
 
 
 }
@@ -151,7 +151,7 @@ int private_cxpathjson_set_cjson_by_path_list(cJSON *element, cJSON *value, cJSO
 
     }
 
-    return CXPATHJSON_OK;
+    return CXPATHJSON_OK_CODE;
 }
 
 int private_cxpathjson_set_cjson_by_va_arg(cJSON *element, cJSON *value, const char *format, va_list args){
