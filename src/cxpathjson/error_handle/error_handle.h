@@ -19,7 +19,7 @@
 #define PRIVATE_CPATHJSON_ON_PATH_FORMAT "%s on path %s"
 #define PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE "path %s its not well formated"
 
-#define  PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE "element has wrong type"
+#define  PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE "element has type %s instead of %s"
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE "middle element  its not array"
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE "Middle element its not iterable"
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE  "middle element its a object"

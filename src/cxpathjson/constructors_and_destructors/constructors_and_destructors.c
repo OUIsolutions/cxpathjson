@@ -3,6 +3,7 @@
 CxpathJson * private_newCxpathJson(){
     CxpathJson  *self = (CxpathJson*) malloc(sizeof (CxpathJson));
     *self = (CxpathJson){0};
+    self->raise_runtime_errors = true;
     return self;
 }
 

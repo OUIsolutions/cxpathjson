@@ -18,6 +18,9 @@ void CxpathJson_raise_errror(CxpathJson * self, int error_code, cJSON *path, con
 }
 
 bool CxpathJson_get_error_code(CxpathJson * self){
+    if(!self){
+        return CXPATHJSON_NOT_FOUND;
+    }
     return self->error_code;
 }
 
