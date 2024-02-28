@@ -2,13 +2,13 @@
 #define  CXPATHJSON_OK_CODE 0
 #define  CXPATHJSON_OK_MESSAGE "Everything its  ok"
 
-#define  CXPATHJSON_DOCUMENT_NOT_EXIST_CODE 1
-#define  CXPATHJSON_DOCUMENT_NOT_EXIST_MESSAGE "Path %s not exist"
-#define  CXPATHJSON_DOCUMENT_NOT_PARSABLE_CODE 2
-#define  CXPATHJSON_DOCUMENT_NOT_PARSABLE_CODE "Path %s its not well formated"
+#define  CXPATHJSON_FILE_NOT_FOUND_CODE 1
+#define  CXPATHJSON_FILE_NOT_FOUND_MESSAGE "file %s  not exist"
+#define  CXPATHJSON_STRING_NOT_PARSABLE_CODE 2
+#define  CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE "string %s its not a valid json"
 #define  CXPATHJSON_ARG_PATH_NOT_VALID_CODE 3
 #define  CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE 4
-#define  CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE "Path %s not exist"
+#define  CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE "Path not exist"
 #define  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE 5
 #define  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE  "middle element its a object"
 
@@ -25,7 +25,7 @@
 #define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_MESSAGE "Append its not valid on read operations"
 
 
-void newCxpathJson_raise_errror(CxpathJson * self, int error_code, const char *path, const char *format, ...);
+void CxpathJson_raise_errror(CxpathJson * self, int error_code, cJSON *path_list, const char *format, ...);
 
 
-void newCxpathJson_clear_errors(CxpathJson * self);
+void CxpathJson_clear_errors(CxpathJson * self);

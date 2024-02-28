@@ -1,18 +1,29 @@
 
-cJSON * private_cxpathjson_cJSON_by_cjson_path_list(int *error_code, cJSON *element, cJSON *path_list){
-    cJSON *current_element = element;
+cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *path_list){
+    cJSON *current_element = self->element;
     int path_size = cJSON_GetArraySize(path_list);
     for(int i = 0;i <path_size;i++){
 
         if(!current_element){
-            *error_code = CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE;
+            CxpathJson_raise_errror(
+                    self,
+                CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
+                        path_list,
+                    CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
+           );
             return  NULL;
         }
+
         bool current_its_object = cJSON_IsObject(current_element);
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
         if(!current_its_terable){
-            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_COD;
+            CxpathJson_raise_errror(
+                    self,
+                    CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
+                    path_list,
+                    CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
+            );
             return  NULL;
         }
 
@@ -45,7 +56,7 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list(int *error_code, cJSON *elem
     return current_element;
 }
 
-cJSON * private_cxpathjson_get_cJSON_by_vargs(int *error_code, cJSON *element, const char *format, va_list args){
+cJSON * private_cxpathjson_get_cJSON_by_vargs( CxpathJson * self, const char *format, va_list args){
     char buffer[2000] = {0};
     vsnprintf(buffer, sizeof(buffer), format, args);
     private_cxpathjson_replace_comas(buffer);
@@ -63,7 +74,7 @@ cJSON * private_cxpathjson_get_cJSON_by_vargs(int *error_code, cJSON *element, c
 }
 
 
-cJSON *cxpathjson_get_cJSON(int *error_code, cJSON *element, const char *format, ...) {
+cJSON *cxpathjson_get_cJSON( cJSON *element, const char *format, ...) {
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
@@ -71,7 +82,7 @@ cJSON *cxpathjson_get_cJSON(int *error_code, cJSON *element, const char *format,
     return  result;
 }
 
-const char * cxpathjson_get_str(int *error_code, cJSON *element, const char *format, ...){
+const char * cxpathjson_get_str( cJSON *element, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
@@ -86,7 +97,7 @@ const char * cxpathjson_get_str(int *error_code, cJSON *element, const char *for
     return  result->valuestring;
 }
 
-double cxpathjson_get_double(int *error_code, cJSON *element, const char *format, ...){
+double cxpathjson_get_double(CxpathJson * self, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
@@ -101,7 +112,7 @@ double cxpathjson_get_double(int *error_code, cJSON *element, const char *format
     return  result->valuedouble;
 }
 
-int cxpathjson_get_int(int *error_code, cJSON *element, const char *format, ...){
+int cxpathjson_get_int( CxpathJson * self, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
@@ -116,7 +127,7 @@ int cxpathjson_get_int(int *error_code, cJSON *element, const char *format, ...)
     return  result->valueint;
 }
 
-bool cxpathjson_get_bool(int *error_code, cJSON *element, const char *format, ...){
+bool cxpathjson_get_bool( CxpathJson * self, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
@@ -130,7 +141,7 @@ bool cxpathjson_get_bool(int *error_code, cJSON *element, const char *format, ..
     }
     return  (bool)result->valueint;
 }
-int cxpathjson_type(cJSON *element, const char *format, ...){
+int cxpathjson_type(CxpathJson * self, const char *format, ...){
 
     if(!element){
         return CJSON_PATH_INVALID;
@@ -173,7 +184,7 @@ int cxpathjson_type(cJSON *element, const char *format, ...){
 
 }
 
-int cxpathjson_size(int *error_code, cJSON *element, const char *format, ...){
+int cxpathjson_size( CxpathJson * self, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);

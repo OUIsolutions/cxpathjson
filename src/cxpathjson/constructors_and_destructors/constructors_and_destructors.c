@@ -15,36 +15,42 @@ CxpathJson * newCxpathJson_from_cJSON(cJSON *element){
 
 
 
-CxpathJson * newCxpathJson_from_string(int *error_code, const char *data){
-
-    cJSON  *result = cJSON_Parse(data);
-    if(!result){
-        *error_code = CXPATHJSON_DOCUMENT_NOT_PARSABLE_CODE;
+CxpathJson * newCxpathJson_from_string( const char *data){
+    CxpathJson  *self = private_newCxpathJson();
+    self->element =  cJSON_Parse(data);
+    if(!self->element){
+        CxpathJson_raise_errror(
+                self,
+                CXPATHJSON_STRING_NOT_PARSABLE_CODE,
+                NULL,
+                CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE,
+                data
+                );
     }
-    return  result;
+    return  self;
 }
 
 
-CxpathJson * newCxpathJson__from_file(int *error_code, const char *path){
+CxpathJson * newCxpathJson__from_file( const char *path){
+
     char *content = private_cxpathjson_read_file(path);
     if(!content){
-        *error_code  = CXPATHJSON_DOCUMENT_NOT_EXIST_CODE;
-        return NULL;
+        CxpathJson  *self = private_newCxpathJson();
+        CxpathJson_raise_errror(
+                self,
+                CXPATHJSON_FILE_NOT_FOUND_CODE,
+                NULL,
+                CXPATHJSON_FILE_NOT_FOUND_MESSAGE,
+                path
+                );
+        return self;
     }
 
-    cJSON *result = cxpathjson_load_from_string(error_code, content);
-    free(content);
-    return result;
+    return newCxpathJson_from_string(content);
 }
+
 void CxpathJson_free(CxpathJson * self){
-    if(self->error_message){
-        free(self->error_message);
-    }
-
-    if(self->error_path){
-        free(self->error_path);
-    }
-
+    CxpathJson_clear_errors(self);
     if(self->element){
         cJSON_Delete(self->element);
     }
