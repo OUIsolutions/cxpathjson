@@ -7,9 +7,9 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *p
         if(!current_element){
             CxpathJson_raise_errror(
                     self,
-                CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
-                        path_list,
-                    CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
+                    CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
+                    path_list,
+                    PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
            );
             return  NULL;
         }
@@ -22,7 +22,7 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *p
                     self,
                     CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
                     path_list,
-                    CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
+                    PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
             );
             return  NULL;
         }
@@ -30,7 +30,12 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *p
         cJSON *current_path = cJSON_GetArrayItem(path_list,i);
 
         if(cJSON_IsString(current_path) && !current_its_object){
-            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE;
+            CxpathJson_raise_errror(
+                    self,
+                    CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE,
+                    path_list,
+                    PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE
+                    );
             return  NULL;
         }
 
@@ -48,8 +53,14 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *p
         }
 
     }
+
     if(!current_element){
-        *error_code = CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE;
+        CxpathJson_raise_errror(
+                self,
+                CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
+                path_list,
+                PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
+                );
         return  NULL;
     }
 
@@ -63,6 +74,7 @@ cJSON * private_cxpathjson_get_cJSON_by_vargs( CxpathJson * self, const char *fo
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
     if(private_cxpathjson_validate_path(parsed_path)){
+
         *error_code = CXPATHJSON_ARG_PATH_NOT_VALID_CODE;
         cJSON_Delete(parsed_path);
         return  NULL;

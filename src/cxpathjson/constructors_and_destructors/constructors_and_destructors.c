@@ -23,7 +23,7 @@ CxpathJson * newCxpathJson_from_string( const char *data){
                 self,
                 CXPATHJSON_STRING_NOT_PARSABLE_CODE,
                 NULL,
-                CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE,
+                PRIVATE_CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE,
                 data
                 );
     }
@@ -40,7 +40,7 @@ CxpathJson * newCxpathJson__from_file( const char *path){
                 self,
                 CXPATHJSON_FILE_NOT_FOUND_CODE,
                 NULL,
-                CXPATHJSON_FILE_NOT_FOUND_MESSAGE,
+                PRIVATE_CXPATHJSON_FILE_NOT_FOUND_MESSAGE,
                 path
                 );
         return self;
