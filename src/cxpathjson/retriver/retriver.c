@@ -1,5 +1,5 @@
 
-cJSON * private_cxpathjson_cJSON_by_cjson_path_list( CxpathJson * self, cJSON *path_list){
+cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *path_list){
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }
@@ -103,7 +103,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
         cJSON_Delete(parsed_path);
         return  NULL;
     }
-    cJSON *result = private_cxpathjson_cJSON_by_cjson_path_list(self, parsed_path);
+    cJSON *result = private_CxpathJson_cJSON_by_cjson_path_list(self, parsed_path);
     cJSON_Delete(parsed_path);
     return result;
 
