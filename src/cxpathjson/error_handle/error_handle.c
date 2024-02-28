@@ -21,7 +21,10 @@ bool CxpathJson_get_error_code(CxpathJson * self){
     return self->error_code;
 }
 
-bool CxpathJson_get_error_message(CxpathJson * self){
+char *  CxpathJson_get_error_message(CxpathJson * self){
+    if(!self->error_code){
+        return NULL;
+    }
 
     if(self->full_error_message){
         return self->full_error_message;

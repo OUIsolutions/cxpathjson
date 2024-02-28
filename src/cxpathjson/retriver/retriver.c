@@ -89,7 +89,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
         cJSON_Delete(parsed_path);
         return  NULL;
     }
-    cJSON *result = private_cxpathjson_cJSON_by_cjson_path_list(error_code, element, parsed_path);
+    cJSON *result = private_cxpathjson_cJSON_by_cjson_path_list(self, parsed_path);
     cJSON_Delete(parsed_path);
     return result;
 

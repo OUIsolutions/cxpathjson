@@ -1,6 +1,5 @@
 
 #define  CXPATHJSON_OK_CODE 0
-#define  CXPATHJSON_OK_MESSAGE "Everything its  ok"
 
 #define  CXPATHJSON_FILE_NOT_FOUND_CODE 1
 #define  CXPATHJSON_STRING_NOT_PARSABLE_CODE 2
@@ -18,7 +17,7 @@
 
 #define  PRIVATE_CXPATHJSON_FILE_NOT_FOUND_MESSAGE "file %s  not exist"
 #define PRIVATE_CPATHJSON_ON_PATH_FORMAT "%s on path %s"
-#define PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE "path %s its not well formated";
+#define PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE "path %s its not well formated"
 
 #define  PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE "element has wrong type"
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE "middle element  its not array"
@@ -31,7 +30,7 @@
 
 
 bool CxpathJson_get_error_code(CxpathJson * self);
-bool CxpathJson_get_error_message(CxpathJson * self);
+char * CxpathJson_get_error_message(CxpathJson * self);
 
 
 
