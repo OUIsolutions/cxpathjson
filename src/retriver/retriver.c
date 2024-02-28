@@ -5,21 +5,21 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list(int *error_code, cJSON *elem
     for(int i = 0;i <path_size;i++){
 
         if(!current_element){
-            *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
+            *error_code = CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE;
             return  NULL;
         }
         bool current_its_object = cJSON_IsObject(current_element);
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
         if(!current_its_terable){
-            *error_code = CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
+            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE;
             return  NULL;
         }
 
         cJSON *current_path = cJSON_GetArrayItem(path_list,i);
 
         if(cJSON_IsString(current_path) && !current_its_object){
-            *error_code = CJSON_PATH_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
+            *error_code = CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT;
             return  NULL;
         }
 
@@ -38,7 +38,7 @@ cJSON * private_cxpathjson_cJSON_by_cjson_path_list(int *error_code, cJSON *elem
 
     }
     if(!current_element){
-        *error_code = CJSON_PATH_ELEMENT_PATH_NOT_EXIST_CODE;
+        *error_code = CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE;
         return  NULL;
     }
 
@@ -52,7 +52,7 @@ cJSON * private_cxpathjson_get_cJSON_by_vargs(int *error_code, cJSON *element, c
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
     if(private_cxpathjson_validate_path(parsed_path)){
-        *error_code = CJSON_PATH_ARG_PATH_NOT_VALID_CODE;
+        *error_code = CXPATHJSON_ARG_PATH_NOT_VALID_CODE;
         cJSON_Delete(parsed_path);
         return  NULL;
     }
@@ -64,7 +64,7 @@ cJSON * private_cxpathjson_get_cJSON_by_vargs(int *error_code, cJSON *element, c
 
 
 cJSON *cxpathjson_get_cJSON(int *error_code, cJSON *element, const char *format, ...) {
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -72,7 +72,7 @@ cJSON *cxpathjson_get_cJSON(int *error_code, cJSON *element, const char *format,
 }
 
 const char * cxpathjson_get_str(int *error_code, cJSON *element, const char *format, ...){
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -80,14 +80,14 @@ const char * cxpathjson_get_str(int *error_code, cJSON *element, const char *for
         return  NULL;
     }
     if(!cJSON_IsString(result)){
-        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
         return  NULL;
     }
     return  result->valuestring;
 }
 
 double cxpathjson_get_double(int *error_code, cJSON *element, const char *format, ...){
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -95,14 +95,14 @@ double cxpathjson_get_double(int *error_code, cJSON *element, const char *format
         return  -1;
     }
     if(!cJSON_IsNumber(result)){
-        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
         return  -1;
     }
     return  result->valuedouble;
 }
 
 int cxpathjson_get_int(int *error_code, cJSON *element, const char *format, ...){
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -110,14 +110,14 @@ int cxpathjson_get_int(int *error_code, cJSON *element, const char *format, ...)
         return  -1;
     }
     if(!cJSON_IsNumber(result)){
-        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
         return  -1;
     }
     return  result->valueint;
 }
 
 bool cxpathjson_get_bool(int *error_code, cJSON *element, const char *format, ...){
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -125,7 +125,7 @@ bool cxpathjson_get_bool(int *error_code, cJSON *element, const char *format, ..
         return  -1;
     }
     if(!cJSON_IsBool(result)){
-        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
         return  -1;
     }
     return  (bool)result->valueint;
@@ -136,7 +136,7 @@ int cxpathjson_type(cJSON *element, const char *format, ...){
         return CJSON_PATH_INVALID;
 
     }
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     int error_code;
 
@@ -174,7 +174,7 @@ int cxpathjson_type(cJSON *element, const char *format, ...){
 }
 
 int cxpathjson_size(int *error_code, cJSON *element, const char *format, ...){
-    va_list args;
+    va_list args = {0};
     va_start(args, format);
     cJSON *result = private_cxpathjson_get_cJSON_by_vargs(error_code, element, format, args);
     va_end(args);
@@ -182,7 +182,7 @@ int cxpathjson_size(int *error_code, cJSON *element, const char *format, ...){
         return  -1;
     }
     if(!cJSON_IsArray(result) && !cJSON_IsObject(result)){
-        *error_code =CJSON_PATH_ELEMENT_HAS_WRONG_TYPE;
+        *error_code =CXPATHJSON_ELEMENT_HAS_WRONG_TYPE;
         return  -1;
     }
 
