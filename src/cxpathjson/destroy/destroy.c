@@ -40,11 +40,11 @@ void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
     //here we know the element exist
     int path_size = cJSON_GetArraySize(parsed_path);
     cJSON *rest = cJSON_CreateArray();
+
     for(int i = 0; i < path_size -1; i++){
         cJSON *element = cJSON_GetArrayItem(parsed_path,i);
         cJSON_AddItemReferenceToArray(rest,element);
     }
-
     cJSON *father = private_CxpathJson_cJSON_by_cjson_path_list(self,rest);
     cJSON_Delete(rest);
 
@@ -56,7 +56,7 @@ void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
     if(cJSON_IsNumber(last)){
         cJSON_DeleteItemFromArray(father,last->valueint);
     }
-    cJSON_Delete(parsed_path);
 
+    cJSON_Delete(parsed_path);
 
 }

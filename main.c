@@ -9,8 +9,11 @@ int  main(){
 
 
     xpath.set_str(t,"aaaaaaaaa","['a','c']");
-    xpath.destroy(t,"['a','b']");
+    //xpath.set_str(t,"aaaaaaaaa","['a','d','$append']");
+
+
     xpath.dump_to_file(t,"result.json",true);
+
 
     CxpathJson_free(t);
 }
