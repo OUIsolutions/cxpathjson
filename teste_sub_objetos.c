@@ -17,7 +17,6 @@ int main(){
         printf("a1:%s\n",a1);
     }
 
-
     CxpathJson *b = xpath.get_array(rooot, "['b']");
     char  *b0 =xpath.get_str(b,"[0]");
     if(!errors.has_errors(rooot)){

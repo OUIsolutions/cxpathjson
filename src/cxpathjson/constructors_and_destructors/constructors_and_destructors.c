@@ -16,7 +16,7 @@ CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
 }
 
 CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
-    CxpathJson  *created = newCxpathJson_from_cJSON(element);
+    CxpathJson  *created = newCxpathJson_from_cJSON_getting_ownership(element);
     created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
     self->childs = (struct CxpathJson **) realloc(
             self->childs,
@@ -28,7 +28,7 @@ CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element
 }
 
 
-CxpathJson * newCxpathJson_from_cJSON(cJSON *element){
+CxpathJson * newCxpathJson_from_cJSON_getting_ownership(cJSON *element){
     CxpathJson  *self = private_newCxpathJson();
     self->element = element;
     return  self;
@@ -36,13 +36,13 @@ CxpathJson * newCxpathJson_from_cJSON(cJSON *element){
 
 CxpathJson * newCxpathJsonObject(){
     cJSON *created = cJSON_CreateObject();
-    return newCxpathJson_from_cJSON(created);
+    return newCxpathJson_from_cJSON_getting_ownership(created);
 }
 
 
 CxpathJson * newCxpathJsonArray(){
     cJSON *created = cJSON_CreateArray();
-    return newCxpathJson_from_cJSON(created);
+    return newCxpathJson_from_cJSON_getting_ownership(created);
 }
 
 
