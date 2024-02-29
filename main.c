@@ -7,7 +7,6 @@ int  main(){
     errors = xpath.errors;
     CxpathJson *t = xpath.new_from_file("a.json");
 
-
     xpath.set_str_getting_ownership(t,strdup("aaaa"),"['a','c']");
     xpath.set_str(t,"aaaaaaaaa","['a','d']");
 
