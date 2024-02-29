@@ -93,12 +93,11 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
     if(private_cxpathjson_validate_path(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson_raise_errror(self,
-                                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
-                                NULL,
-                                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
-                                buffer
+                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
+                NULL,
+                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
+                buffer
         );
-
 
         cJSON_Delete(parsed_path);
         return  NULL;

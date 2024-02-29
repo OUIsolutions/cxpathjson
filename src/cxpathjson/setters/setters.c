@@ -95,12 +95,14 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 }
 void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, cJSON *path_list) {
 
-
-    private_CxpathJson_verifiy_if_insertion_is_possible(self, path_list);
-
     if(CxpathJson_get_error_code(self)){
         return;
     }
+
+    if(private_CxpathJson_verifiy_if_insertion_is_possible(self, path_list)){
+        return;
+    }
+
 
     cJSON *current_element = self->element;
     int path_size = cJSON_GetArraySize(path_list);
@@ -192,7 +194,9 @@ void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, c
 }
 
 void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, const char *format, va_list args){
-
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
     char buffer[2000] = {0};
     vsnprintf(buffer, sizeof(buffer), format, args);
     private_cxpathjson_replace_comas(buffer);
@@ -214,27 +218,35 @@ void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, cons
     }
     private_cxpathjson_set_cjson_by_path_list(self, value, parsed_path);
     cJSON_Delete(parsed_path);
-    return ;
 
 }
 
 
-int cxpathjson_set_cjson(cJSON *element, cJSON *value, const char *format, ...){
-    va_list args = {0};
+void CxpathJson_set_cjson(CxpathJson *self, cJSON *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+    va_list args;
     va_start(args, format);
-    int result = private_CxpathJson_set_cjson_by_va_arg(element, value, format, args);
+    private_CxpathJson_set_cjson_by_va_arg(self, value, format, args);
     va_end(args);
-    return  result;
+
 }
-int cxpathjson_set_str(cJSON *element, const char *string, const char *format, ...){
+void CxpathJson_set_str(CxpathJson *self, const char *string, const char *format, ...){
+
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
     va_list args = {0};
     va_start(args, format);
     cJSON *value = cJSON_CreateString(string);
-    int result = private_CxpathJson_set_cjson_by_va_arg(element, value, format, args);
-    if(result){
+    private_CxpathJson_set_cjson_by_va_arg(self, value, format, args);
+    va_end(args);
+
+    if(CxpathJson_get_error_code(self)){
         cJSON_Delete(value);
+
     }
 
-    va_end(args);
-    return  result;
 }

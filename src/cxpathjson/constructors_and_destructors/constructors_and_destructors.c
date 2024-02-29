@@ -14,6 +14,16 @@ CxpathJson * newCxpathJson_from_cJSON(cJSON *element){
     return  self;
 }
 
+CxpathJson * newCxpathJsonObject(){
+    cJSON *created = cJSON_CreateObject();
+    return newCxpathJson_from_cJSON(created);
+}
+
+
+CxpathJson * newCxpathJsonArray(){
+    cJSON *created = cJSON_CreateArray();
+    return newCxpathJson_from_cJSON(created);
+}
 
 
 CxpathJson * newCxpathJson_from_string( const char *data){
