@@ -259,7 +259,7 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
 }
 
 
-int cxpathjson_size( CxpathJson * self, const char *format, ...){
+int CxpathJson_get_size(CxpathJson * self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return CXPATH_ERROR_NUM_RETURN;
     }
