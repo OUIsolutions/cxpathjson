@@ -47,7 +47,9 @@ CxpathJson * newCxpathJson__from_file( const char *path){
         return self;
     }
 
-    return newCxpathJson_from_string(content);
+    CxpathJson *result = newCxpathJson_from_string(content);
+    free(content);
+    return result;
 }
 
 void CxpathJson_free(CxpathJson * self){
