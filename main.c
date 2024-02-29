@@ -11,11 +11,9 @@ int  main(){
     if(errors.has_errors(t)){
         char *message = errors.get_error_message(t);
         printf("error:%s\n",message);
-        char *path = errors.get_error_path(t);
-        if(path){
-            printf("path:%s\n",path);
-        }
+        
     }
+
     if(errors.is_ok(t)){
         printf("%d\n",b);
     }
