@@ -1,7 +1,6 @@
 {
 	"a":	{
 		"b":	3,
-		"d":	[10],
-		"c":	"aaaaaaaaa"
+		"d":	[["aaaaaaaaa"]]
 	}
 }

@@ -8,8 +8,8 @@ int  main(){
     CxpathJson *t = xpath.new_from_file("a.json");
 
 
-    xpath.set_str(t,"aaaaaaaaa","['a','c']");
-    xpath.set_str(t,"aaaaaaaaa","['a','d',10,10]");
+  //  xpath.set_str(t,"aaaaaaaaa","['a','c']");
+    xpath.set_str(t,"aaaaaaaaa","['a','d','$append','$append']");
 
     if(xpath.errors.has_errors(t)){
         printf("%s",xpath.errors.get_error_message(t));
