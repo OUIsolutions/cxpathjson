@@ -51,9 +51,7 @@ def parse_readme_lexer(text:str)->list:
                 extension = divided_ref[-1].strip()
             constructed.append({'type':'ref','ref':ref,'extension':extension})
             block =''
-            inside_block = True
-            first_line_inside_block = True
-
+    
         if ref is None:
             block+=line+'\n'
 
