@@ -9,9 +9,9 @@ void CxpathJson_raise_errror(CxpathJson * self, int error_code, cJSON *path, con
         self->path_list = cJSON_Duplicate(path, true);
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
-    self->error_message = malloc(2000 * sizeof (char));
+    self->error_message = (char*)malloc(2000 * sizeof (char));
     vsnprintf(self->error_message, 2000 * sizeof (char), format, args);
     va_end(args);
 
@@ -37,11 +37,23 @@ char *  CxpathJson_get_error_message(CxpathJson * self){
         return self->error_message;
     }
 
-    self->full_error_message = (char*)malloc(
-            strlen(self->error_path_str) + strlen(self->error_message) + 2
-            );
+    if(!self->error_message){
+        return NULL;
+    }
 
-    sprintf(self->full_error_message,PRIVATE_CPATHJSON_ON_PATH_FORMAT,self->error_message,self->error_path_str);
+
+    self->full_error_message = (char *) malloc(
+
+            strlen(self->error_path_str) +
+            strlen(self->error_message) +
+            strlen(PRIVATE_CPATHJSON_ON_PATH_FORMAT) + 2
+    );
+    sprintf(self->full_error_message,
+            PRIVATE_CPATHJSON_ON_PATH_FORMAT,
+            self->error_message,
+            self->error_path_str
+    );
+
     return self->full_error_message;
 
 }

@@ -13,5 +13,6 @@ bool private_cxpathjson_path_is_append(cJSON *current_path){
     if(cJSON_IsString(current_path)){
         is_append = strcmp(current_path->valuestring, CXPATHJSON_APPEND_KEY) == 0;
     }
+    return is_append;
 
 }

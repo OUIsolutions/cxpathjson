@@ -114,7 +114,7 @@ cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs( self, format, args);
     va_end(args);
@@ -126,7 +126,7 @@ const char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
         return NULL;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
     va_end(args);
@@ -148,6 +148,8 @@ const char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
                 private_cxpathjson_convert_json_type_to_str(result),
                 CXPATHJSON_STRING_TEXT
                 );
+        cJSON_Delete(parsed_path);
+
         return  NULL;
     }
     return  result->valuestring;
@@ -158,7 +160,7 @@ double CxpathJson_get_double(CxpathJson * self, const char *format, ...){
         return CXPATH_ERROR_NUM_RETURN;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
     va_end(args);
@@ -181,6 +183,8 @@ double CxpathJson_get_double(CxpathJson * self, const char *format, ...){
                 private_cxpathjson_convert_json_type_to_str(result),
                 CXPATHJSON_NUMBER_TEXT
         );
+        cJSON_Delete(parsed_path);
+
         return CXPATH_ERROR_NUM_RETURN;
     }
     return  result->valuedouble;
@@ -191,7 +195,7 @@ int CxpathJson_get_int(CxpathJson * self, const char *format, ...){
         return CXPATH_ERROR_NUM_RETURN;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
     va_end(args);
@@ -214,6 +218,7 @@ int CxpathJson_get_int(CxpathJson * self, const char *format, ...){
                 private_cxpathjson_convert_json_type_to_str(result),
                 CXPATHJSON_NUMBER_TEXT
         );
+        cJSON_Delete(parsed_path);
         return CXPATH_ERROR_NUM_RETURN;
     }
     return  result->valueint;
@@ -224,7 +229,7 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
         return CXPATH_ERROR_NUM_RETURN;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
     va_end(args);
@@ -247,6 +252,8 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
                 private_cxpathjson_convert_json_type_to_str(result),
                 CXPATHJSON_BOOL_TEXT
         );
+        cJSON_Delete(parsed_path);
+
         return CXPATH_ERROR_NUM_RETURN;
     }
     return  (bool)result->valueint;
@@ -258,7 +265,7 @@ int cxpathjson_size( CxpathJson * self, const char *format, ...){
         return CXPATH_ERROR_NUM_RETURN;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
     va_end(args);
@@ -282,6 +289,8 @@ int cxpathjson_size( CxpathJson * self, const char *format, ...){
                 CXPATHJSON_ARRAY
 
                 );
+        cJSON_Delete(parsed_path);
+
         return CXPATH_ERROR_NUM_RETURN;
     }
     return cJSON_GetArraySize(result);
