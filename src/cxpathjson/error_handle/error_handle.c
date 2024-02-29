@@ -23,6 +23,7 @@ int CxpathJson_get_error_code(CxpathJson * self){
     }
     return self->error_code;
 }
+
 bool CxpathJson_has_errors(CxpathJson * self){
     return (bool) CxpathJson_get_error_code(self);
 }
