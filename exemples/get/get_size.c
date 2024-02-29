@@ -1,4 +1,5 @@
-#include "src/one.c"
+
+#include "CxpathJson.h"
 
 
 
@@ -9,10 +10,8 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("a.json");
-
-    xpath.set_str(t,"teste","['a','b']");
-
+    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    int content = xpath.size(t,"['c']");
     if(errors.has_errors(t)){
         char *message =errors.get_error_message(t);
         int code = errors.get_error_code(t);
@@ -22,7 +21,7 @@ int main(){
         return 0;
     }
 
-    xpath.dump_to_file(t,"c.json", true);
+    printf("%d",content);
     xpath.free(t);
 
 }

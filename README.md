@@ -1,67 +1,19 @@
+# CXPathJson
+CXPathJson is a library to set and get values from a json string using a path string.
 
+# Installation 
 
-<!--codeof:exemples/get/get.c-->
-~~~c
+## Single File
+CXpathJson is made to be as dumb as possible and adopt the idea of single file library.
+For installation, simply copy the **CXpathJson.h** into your project and compile with gcc/g++ or clang. 
 
-#include "CxpathJson.h"
+[Download Link]()
 
+# Usage
 
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    int content = xpath.get_int(t,"['a','b']");
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("%d",code);
-        printf("%s",message);
-        xpath.free(t);
-        return 0;
-    }
-
-    printf("%d",content);
-    xpath.free(t);
-
-}
-~~~
-
-
-aaaa
-
-
-<!--codeof:exemples/get/get.c-->
-~~~c
-
-#include "CxpathJson.h"
+## example
+```c
 
 
 
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
 
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    int content = xpath.get_int(t,"['a','b']");
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("%d",code);
-        printf("%s",message);
-        xpath.free(t);
-        return 0;
-    }
-
-    printf("%d",content);
-    xpath.free(t);
-
-}
-~~~
