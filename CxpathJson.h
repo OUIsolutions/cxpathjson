@@ -388,7 +388,7 @@ CxpathJson * private_newCxpathJson();
 
 CxpathJson * private_CxpathJson_get_root(CxpathJson *self);
 
-void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element);
+CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element);
 
 
 CxpathJson * newCxpathJson_from_cJSON(cJSON *element);
@@ -465,7 +465,15 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
 
 cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
- char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
+
+char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
+
+
+CxpathJson  * CxpathJson_get_object(CxpathJson * self, const char *format, ...);
+
+
+CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...);
+
 
 double CxpathJson_get_double(CxpathJson * self, const char *format, ...);
 
@@ -604,6 +612,9 @@ typedef struct {
     int (*get_int)(CxpathJson * self, const char *format, ...);
     bool (*get_bool)(CxpathJson * self, const char *format, ...);
     int (*size)(CxpathJson * self, const char *format, ...);
+    CxpathJson  * (*get_object)(CxpathJson * self, const char *format, ...);
+    CxpathJson  * (*get_array)(CxpathJson * self, const char *format, ...);
+
 
     void (*set_cjson)(CxpathJson *self, cJSON *value, const char *format, ...);
     void (*set_str)(CxpathJson *self, const char *value, const char *format, ...);
@@ -3992,7 +4003,7 @@ CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
     return (CxpathJson *) self->private_root;
 }
 
-void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
+CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
 
     CxpathJson  *created = newCxpathJson_from_cJSON(element);
     created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
@@ -4002,6 +4013,7 @@ void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
              );
     self->childs[self->size] = (struct CxpathJson *) created;
     self->size+=1;
+    return created;
 }
 
 
@@ -4250,10 +4262,10 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson  *root = private_CxpathJson_get_root(self);
         CxpathJson_raise_errror(root,
-                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
-                NULL,
-                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
-                buffer
+                                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
+                                NULL,
+                                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
+                                buffer
         );
 
         cJSON_Delete(parsed_path);
@@ -4264,6 +4276,9 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
     return result;
 
 }
+
+
+
 
 
 cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
@@ -4277,6 +4292,88 @@ cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
     va_end(args);
     return  result;
 }
+
+
+CxpathJson  * CxpathJson_get_object(CxpathJson * self, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
+    va_end(args);
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
+
+    if(!cJSON_IsObject(result)){
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
+
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_OBJECT_TEXT
+            );
+            cJSON_Delete(parsed_path);
+        }
+
+
+        return  NULL;
+    }
+
+    return private_CxpathJson_construct_child(self,result);
+}
+
+CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
+    va_end(args);
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
+
+    if(!cJSON_IsArray(result)){
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
+
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_OBJECT_TEXT
+            );
+            cJSON_Delete(parsed_path);
+        }
+
+
+        return  NULL;
+    }
+
+    return private_CxpathJson_construct_child(self,result);
+}
+
+
+CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...);
 
  char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
@@ -5054,6 +5151,8 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.get_double = CxpathJson_get_double;
     self.get_int = CxpathJson_get_int;
     self.get_str  = CxpathJson_get_str;
+    self.get_object = CxpathJson_get_object;
+    self.get_array = CxpathJson_get_array;
     self.size = CxpathJson_get_size;
 
 

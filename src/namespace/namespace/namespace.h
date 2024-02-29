@@ -21,6 +21,9 @@ typedef struct {
     int (*get_int)(CxpathJson * self, const char *format, ...);
     bool (*get_bool)(CxpathJson * self, const char *format, ...);
     int (*size)(CxpathJson * self, const char *format, ...);
+    CxpathJson  * (*get_object)(CxpathJson * self, const char *format, ...);
+    CxpathJson  * (*get_array)(CxpathJson * self, const char *format, ...);
+
 
     void (*set_cjson)(CxpathJson *self, cJSON *value, const char *format, ...);
     void (*set_str)(CxpathJson *self, const char *value, const char *format, ...);

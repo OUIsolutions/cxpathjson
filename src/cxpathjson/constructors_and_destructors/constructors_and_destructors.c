@@ -15,7 +15,7 @@ CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
     return (CxpathJson *) self->private_root;
 }
 
-void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
+CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
 
     CxpathJson  *created = newCxpathJson_from_cJSON(element);
     created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
@@ -25,6 +25,7 @@ void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
              );
     self->childs[self->size] = (struct CxpathJson *) created;
     self->size+=1;
+    return created;
 }
 
 

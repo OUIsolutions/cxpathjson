@@ -16,6 +16,8 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.get_double = CxpathJson_get_double;
     self.get_int = CxpathJson_get_int;
     self.get_str  = CxpathJson_get_str;
+    self.get_object = CxpathJson_get_object;
+    self.get_array = CxpathJson_get_array;
     self.size = CxpathJson_get_size;
 
 
