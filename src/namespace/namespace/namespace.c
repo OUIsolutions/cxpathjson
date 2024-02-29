@@ -2,6 +2,9 @@
 
 CxpathJsonNamespace newCxpathJsonNamespace(){
     CxpathJsonNamespace self;
+
+    self.dump_to_file =CxpathJson_dump_to_file;
+    self.dump_to_string = CxpathJson_dump_to_string;
     self.new_from_cJSON = newCxpathJson_from_cJSON;
     self.newJsonObject = newCxpathJsonObject;
     self.newJsonArray = newCxpathJsonArray;
