@@ -16,7 +16,6 @@ CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
 }
 
 CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
-
     CxpathJson  *created = newCxpathJson_from_cJSON(element);
     created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
     self->childs = (struct CxpathJson **) realloc(
