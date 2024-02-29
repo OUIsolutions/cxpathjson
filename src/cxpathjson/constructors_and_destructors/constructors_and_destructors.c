@@ -3,8 +3,28 @@
 CxpathJson * private_newCxpathJson(){
     CxpathJson  *self = (CxpathJson*) malloc(sizeof (CxpathJson));
     *self = (CxpathJson){0};
+    self->childs = (struct CxpathJson **) (CxpathJson **) malloc(0);
     self->raise_runtime_errors = true;
     return self;
+}
+
+CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
+    if(!self->private_root){
+        return self;
+    }
+    return (CxpathJson *) self->private_root;
+}
+
+void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
+
+    CxpathJson  *created = newCxpathJson_from_cJSON(element);
+    created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
+    self->childs = (struct CxpathJson **) realloc(
+            self->childs,
+            (self->size +1) * sizeof(CxpathJson)
+             );
+    self->childs[self->size] = (struct CxpathJson *) created;
+    self->size+=1;
 }
 
 
@@ -63,10 +83,16 @@ CxpathJson * newCxpathJson_from_file(const char *path){
 }
 
 void CxpathJson_free(CxpathJson * self){
-   CxpathJson_clear_errors(self);
-    if(self->element){
+    //means its root element
+    if(self->element && !self->private_root){
+        CxpathJson_clear_errors(self);
         cJSON_Delete(self->element);
     }
+    for(int i = 0; i < self->size; i++){
+        struct CxpathJson  *current_child = self->childs[i];
+        CxpathJson_free((CxpathJson *) current_child);
+    }
+    free(self->childs);
 
     free(self);
 }

@@ -4,17 +4,20 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
     int path_size = cJSON_GetArraySize(path_list);
 
     if(path_size == 0){
-        char *dumped = cJSON_Print(path_list);
+
         if(self->raise_runtime_errors){
+            char *dumped = cJSON_Print(path_list);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
             CxpathJson_raise_errror(
-                    self,
+                    root,
                     CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
                     path_list,
                     PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
                     dumped
             );
+            free(dumped);
+
         }
-        free(dumped);
         return CXPATHJSON_GENERIC_ERROR;
     }
 
@@ -39,8 +42,10 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 
         if(current_its_iterable == false) {
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
@@ -50,9 +55,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
         }
 
         if(path_must_be_an_object && current_its_object == false){
+
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE
@@ -64,9 +72,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
         }
 
         if(path_must_be_an_array && current_is_an_array == false){
+
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE
@@ -94,9 +105,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
             current_element = cJSON_GetArrayItem(current_element,index);
             if(!current_element){
                 //for array explict possitions its required
+
                 if(self->raise_runtime_errors){
+                    CxpathJson  *root = private_CxpathJson_get_root(self);
+
                     CxpathJson_raise_errror(
-                            self,
+                            root,
                             CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
                     path_list,
                             PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE

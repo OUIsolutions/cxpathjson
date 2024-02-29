@@ -9,5 +9,9 @@ typedef struct {
      char *error_path_str;
     int error_code;
 
+    struct CxpathJson *private_root;
+    struct CxpathJson **childs;
+    int size;
+
 }CxpathJson;
 

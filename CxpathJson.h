@@ -343,6 +343,10 @@ typedef struct {
      char *error_path_str;
     int error_code;
 
+    struct CxpathJson *private_root;
+    struct CxpathJson **childs;
+    int size;
+
 }CxpathJson;
 
 
@@ -382,6 +386,9 @@ const char * CxpathJson_type_str(CxpathJson * self, const char *format, ...);
 
 CxpathJson * private_newCxpathJson();
 
+CxpathJson * private_CxpathJson_get_root(CxpathJson *self);
+
+void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element);
 
 
 CxpathJson * newCxpathJson_from_cJSON(cJSON *element);
@@ -3973,8 +3980,28 @@ bool CxpathJson_its_iterable(CxpathJson * self, const char *format, ...){
 CxpathJson * private_newCxpathJson(){
     CxpathJson  *self = (CxpathJson*) malloc(sizeof (CxpathJson));
     *self = (CxpathJson){0};
+    self->childs = (struct CxpathJson **) (CxpathJson **) malloc(0);
     self->raise_runtime_errors = true;
     return self;
+}
+
+CxpathJson * private_CxpathJson_get_root(CxpathJson *self){
+    if(!self->private_root){
+        return self;
+    }
+    return (CxpathJson *) self->private_root;
+}
+
+void private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element){
+
+    CxpathJson  *created = newCxpathJson_from_cJSON(element);
+    created->private_root = (struct CxpathJson *) private_CxpathJson_get_root(self);
+    self->childs = (struct CxpathJson **) realloc(
+            self->childs,
+            (self->size +1) * sizeof(CxpathJson)
+             );
+    self->childs[self->size] = (struct CxpathJson *) created;
+    self->size+=1;
 }
 
 
@@ -4033,10 +4060,16 @@ CxpathJson * newCxpathJson_from_file(const char *path){
 }
 
 void CxpathJson_free(CxpathJson * self){
-   CxpathJson_clear_errors(self);
-    if(self->element){
+    //means its root element
+    if(self->element && !self->private_root){
+        CxpathJson_clear_errors(self);
         cJSON_Delete(self->element);
     }
+    for(int i = 0; i < self->size; i++){
+        struct CxpathJson  *current_child = self->childs[i];
+        CxpathJson_free((CxpathJson *) current_child);
+    }
+    free(self->childs);
 
     free(self);
 }
@@ -4062,11 +4095,14 @@ void CxpathJson_raise_errror(CxpathJson * self, int error_code, cJSON *path, con
 }
 
 int CxpathJson_get_error_code(CxpathJson * self){
+
     if(!self){
         return CXPATHJSON_NOT_FOUND;
     }
-    return self->error_code;
+    CxpathJson  *root = private_CxpathJson_get_root(self);
+    return root->error_code;
 }
+
 
 bool CxpathJson_has_errors(CxpathJson * self){
     return (bool) CxpathJson_get_error_code(self);
@@ -4116,14 +4152,16 @@ cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *pa
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }
+
     cJSON *current_element = self->element;
     int path_size = cJSON_GetArraySize(path_list);
     for(int i = 0;i <path_size;i++){
 
         if(!current_element){
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
@@ -4137,9 +4175,12 @@ cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *pa
         bool current_its_terable = cJSON_IsArray(current_element) || current_its_object;
 
         if(!current_its_terable){
+
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
@@ -4153,8 +4194,9 @@ cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *pa
 
         if(cJSON_IsString(current_path) && !current_its_object){
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE
@@ -4180,8 +4222,9 @@ cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *pa
 
     if(!current_element){
         if(self->raise_runtime_errors){
+            CxpathJson  *root = private_CxpathJson_get_root(self);
             CxpathJson_raise_errror(
-                    self,
+                    root,
                     CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
                     path_list,
                     PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
@@ -4205,7 +4248,8 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
 
     if(private_cxpathjson_validate_path(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
-        CxpathJson_raise_errror(self,
+        CxpathJson  *root = private_CxpathJson_get_root(self);
+        CxpathJson_raise_errror(root,
                 CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
                 NULL,
                 PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
@@ -4223,6 +4267,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
 
 
 cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
+
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }
@@ -4247,20 +4292,24 @@ cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
     }
 
     if(!cJSON_IsString(result)){
-        char buffer[2000] = {0};
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        private_cxpathjson_replace_comas(buffer);
-        cJSON *parsed_path  = cJSON_Parse(buffer);
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
 
-        CxpathJson_raise_errror(
-                self,
-                CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
-                parsed_path,
-                PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
-                private_cxpathjson_convert_json_type_to_str(result),
-                CXPATHJSON_STRING_TEXT
-                );
-        cJSON_Delete(parsed_path);
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_STRING_TEXT
+            );
+            cJSON_Delete(parsed_path);
+
+        }
 
         return  NULL;
     }
@@ -4282,21 +4331,23 @@ double CxpathJson_get_double(CxpathJson * self, const char *format, ...){
     }
 
     if(!cJSON_IsNumber(result)){
-        char buffer[2000] = {0};
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        private_cxpathjson_replace_comas(buffer);
-        cJSON *parsed_path  = cJSON_Parse(buffer);
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
 
-        CxpathJson_raise_errror(
-                self,
-                CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
-                parsed_path,
-                PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
-                private_cxpathjson_convert_json_type_to_str(result),
-                CXPATHJSON_NUMBER_TEXT
-        );
-        cJSON_Delete(parsed_path);
-
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_NUMBER_TEXT
+            );
+            cJSON_Delete(parsed_path);
+        }
         return CXPATH_ERROR_NUM_RETURN;
     }
     return  result->valuedouble;
@@ -4317,20 +4368,26 @@ int CxpathJson_get_int(CxpathJson * self, const char *format, ...){
     }
 
     if(!cJSON_IsNumber(result)){
-        char buffer[2000] = {0};
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        private_cxpathjson_replace_comas(buffer);
-        cJSON *parsed_path  = cJSON_Parse(buffer);
 
-        CxpathJson_raise_errror(
-                self,
-                CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
-                parsed_path,
-                PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
-                private_cxpathjson_convert_json_type_to_str(result),
-                CXPATHJSON_NUMBER_TEXT
-        );
-        cJSON_Delete(parsed_path);
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_NUMBER_TEXT
+            );
+            cJSON_Delete(parsed_path);
+
+        }
+
         return CXPATH_ERROR_NUM_RETURN;
     }
     return  result->valueint;
@@ -4351,20 +4408,25 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
     }
 
     if(!cJSON_IsBool(result)){
-        char buffer[2000] = {0};
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        private_cxpathjson_replace_comas(buffer);
-        cJSON *parsed_path  = cJSON_Parse(buffer);
 
-        CxpathJson_raise_errror(
-                self,
-                CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
-                parsed_path,
-                PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
-                private_cxpathjson_convert_json_type_to_str(result),
-                CXPATHJSON_BOOL_TEXT
-        );
-        cJSON_Delete(parsed_path);
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
+
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_BOOL_TEXT
+            );
+            cJSON_Delete(parsed_path);
+
+        }
 
         return CXPATH_ERROR_NUM_RETURN;
     }
@@ -4386,21 +4448,26 @@ int CxpathJson_get_size(CxpathJson * self, const char *format, ...){
     }
 
     if(!cJSON_IsArray(result)){
-        char buffer[2000] = {0};
-        vsnprintf(buffer, sizeof(buffer), format, args);
-        private_cxpathjson_replace_comas(buffer);
-        cJSON *parsed_path  = cJSON_Parse(buffer);
+        if(self->raise_runtime_errors){
+            char buffer[2000] = {0};
+            vsnprintf(buffer, sizeof(buffer), format, args);
+            private_cxpathjson_replace_comas(buffer);
 
-        CxpathJson_raise_errror(
-                self,
-                CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
-                parsed_path,
-                PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
-                private_cxpathjson_convert_json_type_to_str(result),
-                CXPATHJSON_ARRAY
+            cJSON *parsed_path  = cJSON_Parse(buffer);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
 
-                );
-        cJSON_Delete(parsed_path);
+            CxpathJson_raise_errror(
+                    root,
+                    CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
+                    parsed_path,
+                    PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
+                    private_cxpathjson_convert_json_type_to_str(result),
+                    CXPATHJSON_ARRAY
+
+            );
+            cJSON_Delete(parsed_path);
+
+        }
 
         return CXPATH_ERROR_NUM_RETURN;
     }
@@ -4413,17 +4480,20 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
     int path_size = cJSON_GetArraySize(path_list);
 
     if(path_size == 0){
-        char *dumped = cJSON_Print(path_list);
+
         if(self->raise_runtime_errors){
+            char *dumped = cJSON_Print(path_list);
+            CxpathJson  *root = private_CxpathJson_get_root(self);
             CxpathJson_raise_errror(
-                    self,
+                    root,
                     CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
                     path_list,
                     PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
                     dumped
             );
+            free(dumped);
+
         }
-        free(dumped);
         return CXPATHJSON_GENERIC_ERROR;
     }
 
@@ -4448,8 +4518,10 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 
         if(current_its_iterable == false) {
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
@@ -4459,9 +4531,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
         }
 
         if(path_must_be_an_object && current_its_object == false){
+
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE
@@ -4473,9 +4548,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
         }
 
         if(path_must_be_an_array && current_is_an_array == false){
+
             if(self->raise_runtime_errors){
+                CxpathJson  *root = private_CxpathJson_get_root(self);
+
                 CxpathJson_raise_errror(
-                        self,
+                        root,
                         CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE,
                         path_list,
                         PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE
@@ -4503,9 +4581,12 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
             current_element = cJSON_GetArrayItem(current_element,index);
             if(!current_element){
                 //for array explict possitions its required
+
                 if(self->raise_runtime_errors){
+                    CxpathJson  *root = private_CxpathJson_get_root(self);
+
                     CxpathJson_raise_errror(
-                            self,
+                            root,
                             CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE,
                     path_list,
                             PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
@@ -4740,7 +4821,9 @@ void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, cons
 
     if(private_cxpathjson_validate_path(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
-        CxpathJson_raise_errror(self,
+        CxpathJson  *root = private_CxpathJson_get_root(self);
+
+        CxpathJson_raise_errror(root,
                                 CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
                                 NULL,
                                 PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,

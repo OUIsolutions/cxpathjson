@@ -112,7 +112,9 @@ void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, cons
 
     if(private_cxpathjson_validate_path(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
-        CxpathJson_raise_errror(self,
+        CxpathJson  *root = private_CxpathJson_get_root(self);
+
+        CxpathJson_raise_errror(root,
                                 CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
                                 NULL,
                                 PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
