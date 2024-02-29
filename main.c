@@ -11,7 +11,7 @@ int main(){
     errors = xpath.errors;
     CxpathJson *t = xpath.new_from_file("tests/target/a.json");
 
-    int content = xpath.get_int(t,"['a','b']");
+    char * content = xpath.get_str(t,"['a','b']");
 
     if(errors.has_errors(t)){
         char *message =errors.get_error_message(t);
@@ -22,7 +22,7 @@ int main(){
         return 0;
     }
 
-    printf("%d",content);
+    printf("%s",content);
     xpath.free(t);
 
 }

@@ -11,6 +11,7 @@ ct.generate_amalgamated_code(STARTER,OUTPUT)
 if SIDE_EFFECT_FOLDER is None:
     SIDE_EFFECT_FOLDER = 'side_effect'
 
+
 makedirs(SIDE_EFFECT_FOLDER,exist_ok=True)
 
 test = ct.FolderTestPreset(
@@ -24,5 +25,6 @@ test.start_test()
 
 create_exemples()
 markdown = ct.include_code_in_markdown('conf/README.md',save_file=False)
+
 with open('README.md','w') as arq:
     arq.write(markdown)

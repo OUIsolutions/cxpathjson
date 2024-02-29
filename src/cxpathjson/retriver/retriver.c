@@ -120,7 +120,7 @@ cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
     return  result;
 }
 
-const char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
+ char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }

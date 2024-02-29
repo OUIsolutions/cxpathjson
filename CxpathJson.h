@@ -458,7 +458,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
 
 cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
-const char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
+ char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
 
 double CxpathJson_get_double(CxpathJson * self, const char *format, ...);
 
@@ -592,7 +592,7 @@ typedef struct {
     void (*free)(CxpathJson * self);
 
     cJSON * (*get_cJSON)(CxpathJson * self, const char *format, ...);
-    const char * (*get_str)(CxpathJson * self, const char *format, ...);
+     char * (*get_str)(CxpathJson * self, const char *format, ...);
     double (*get_double)(CxpathJson * self, const char *format, ...);
     int (*get_int)(CxpathJson * self, const char *format, ...);
     bool (*get_bool)(CxpathJson * self, const char *format, ...);
@@ -4233,7 +4233,7 @@ cJSON *CxpathJson_get_cJSON(CxpathJson  *self, const char *format, ...) {
     return  result;
 }
 
-const char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
+ char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }

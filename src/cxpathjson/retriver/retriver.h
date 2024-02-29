@@ -8,7 +8,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
 
 cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
-const char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
+ char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
 
 double CxpathJson_get_double(CxpathJson * self, const char *format, ...);
 
