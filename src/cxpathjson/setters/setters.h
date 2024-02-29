@@ -16,4 +16,3 @@ void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...);
 
 void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...);
 
-void CxpathJson_destroy(CxpathJson *self,const char *format, ...);

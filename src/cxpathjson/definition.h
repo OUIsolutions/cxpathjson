@@ -4,3 +4,4 @@
 #include "retriver/retriver.c"
 #include "setters/setters.c"
 #include "dump/dump.c"
+#include "destroy/destroy.c"

@@ -5,3 +5,4 @@
 #include "retriver/retriver.h"
 #include "setters/setters.h"
 #include "dump/dump.h"
+#include "destroy/destroy.h"

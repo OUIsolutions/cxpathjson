@@ -238,7 +238,7 @@ void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format,
         return;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *value_cjson = cJSON_CreateString(value);
     private_CxpathJson_set_cjson_by_va_arg(self, value_cjson, format, args);
@@ -258,7 +258,7 @@ void CxpathJson_set_double(CxpathJson *self, double value, const char *format, .
         return;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *value_cjson = cJSON_CreateNumber(value);
     private_CxpathJson_set_cjson_by_va_arg(self, value_cjson, format, args);
@@ -275,7 +275,7 @@ void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...){
         return;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *value_cjson = cJSON_CreateNumber((double )value);
     private_CxpathJson_set_cjson_by_va_arg(self, value_cjson, format, args);
@@ -292,7 +292,7 @@ void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
         return;
     }
 
-    va_list args = {0};
+    va_list args;
     va_start(args, format);
     cJSON *value_cjson = cJSON_CreateBool(value);
     private_CxpathJson_set_cjson_by_va_arg(self, value_cjson, format, args);
@@ -302,22 +302,4 @@ void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
         cJSON_Delete(value_cjson);
 
     }
-}
-void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
-    if(CxpathJson_get_error_code(self)){
-        return ;
-    }
-
-    va_list args;
-    va_start(args, format);
-    bool old_raise_conf = self->raise_runtime_errors;
-
-    self->raise_runtime_errors = false;
-    cJSON *result = private_CxpathJson_get_cJSON_by_vargs( self,format, args);
-    self->raise_runtime_errors = old_raise_conf;
-    va_end(args);
-    if(result){
-        cJSON_Delete(result);
-    }
-
 }
