@@ -25,7 +25,7 @@ typedef struct {
 
 
     CxpathJsonErrorNamespace errors;
-
+    CxpathJsonTypeNamespace  types;
 }CxpathJsonNamespace;
 
 CxpathJsonNamespace newCxpathJsonNamespace();

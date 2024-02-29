@@ -22,5 +22,8 @@ int CxpathJson_type(CxpathJson * self, const char *format, ...);
 
 bool CxpathJson_exist(CxpathJson * self, const char *format, ...);
 
+bool CxpathJson_its_not_null(CxpathJson * self, const char *format, ...);
+
+bool CxpathJson_its_iterable(CxpathJson * self, const char *format, ...);
 
 const char * CxpathJson_type_str(CxpathJson * self, const char *format, ...);

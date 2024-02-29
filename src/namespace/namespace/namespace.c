@@ -24,6 +24,6 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
 
     
     self.errors = newCxpathJsonErrorNamespace();
-
+    self.types = newCxpathJsonTypeNamespace();
     return self;
 }
