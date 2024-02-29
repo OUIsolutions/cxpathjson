@@ -14,7 +14,7 @@ double cxpathjson_get_double(CxpathJson * self, const char *format, ...);
 
 int cxpathjson_get_int(CxpathJson * self, const char *format, ...);
 
-bool cxpathjson_get_bool(CxpathJson * self, const char *format, ...);
+bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...);
 
 
 int cxpathjson_size(CxpathJson * self, const char *format, ...);
