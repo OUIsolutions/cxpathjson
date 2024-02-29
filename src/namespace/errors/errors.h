@@ -2,6 +2,7 @@ typedef struct {
 
 
     int (*get_error_code)(CxpathJson * self);
+    bool (*is_ok)(CxpathJson * self);
 
     bool (*has_errors)(CxpathJson * self);
     char * (*get_error_message)(CxpathJson * self);

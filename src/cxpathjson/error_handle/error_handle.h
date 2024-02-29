@@ -32,6 +32,7 @@ int CxpathJson_get_error_code(CxpathJson * self);
 
 bool CxpathJson_has_errors(CxpathJson * self);
 
+bool CxpathJson_is_ok(CxpathJson * self);
 
 char * CxpathJson_get_error_message(CxpathJson * self);
 

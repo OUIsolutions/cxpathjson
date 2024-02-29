@@ -6,6 +6,7 @@ CxpathJsonErrorNamespace newCxpathJsonErrorNamespace(){
     self.get_error_message = CxpathJson_get_error_message;
     self.clear_errors = CxpathJson_clear_errors;
     self.has_errors = CxpathJson_has_errors;
+    self.is_ok = CxpathJson_is_ok;
     self.raise_errror = CxpathJson_raise_errror;
     return  self;
 }

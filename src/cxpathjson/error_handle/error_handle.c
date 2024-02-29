@@ -28,7 +28,12 @@ bool CxpathJson_has_errors(CxpathJson * self){
     return (bool) CxpathJson_get_error_code(self);
 }
 
-
+bool CxpathJson_is_ok(CxpathJson * self){
+    if(CxpathJson_has_errors(self)){
+        return false;
+    }
+    return true;
+}
 char *  CxpathJson_get_error_message(CxpathJson * self){
     if(!self->error_code){
         return NULL;
