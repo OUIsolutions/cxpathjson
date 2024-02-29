@@ -21,8 +21,9 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.set_double = CxpathJson_set_double;
     self.set_cjson = CxpathJson_set_cjson;
     self.set_str  = CxpathJson_set_str;
+    self.destroy = CxpathJson_destroy;
 
-    
+
     self.errors = newCxpathJsonErrorNamespace();
     self.types = newCxpathJsonTypeNamespace();
     return self;

@@ -303,3 +303,21 @@ void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
 
     }
 }
+void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return ;
+    }
+
+    va_list args;
+    va_start(args, format);
+    bool old_raise_conf = self->raise_runtime_errors;
+
+    self->raise_runtime_errors = false;
+    cJSON *result = private_CxpathJson_get_cJSON_by_vargs( self,format, args);
+    self->raise_runtime_errors = old_raise_conf;
+    va_end(args);
+    if(result){
+        cJSON_Delete(result);
+    }
+
+}

@@ -4,3 +4,4 @@
 #include "error_handle/error_handle.h"
 #include "retriver/retriver.h"
 #include "setters/setters.h"
+#include "dump/dump.h"

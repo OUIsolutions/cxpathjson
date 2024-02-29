@@ -3,3 +3,4 @@
 #include "error_handle/error_handle.c"
 #include "retriver/retriver.c"
 #include "setters/setters.c"
+#include "dump/dump.c"

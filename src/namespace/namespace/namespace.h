@@ -22,6 +22,7 @@ typedef struct {
     void (*set_double)(CxpathJson *self, double value, const char *format, ...);
     void (*set_long)(CxpathJson *self, long value, const char *format, ...);
     void (*set_bool)(CxpathJson *self, bool value, const char *format, ...);
+    void (*destroy)(CxpathJson *self,const char *format, ...);
 
 
     CxpathJsonErrorNamespace errors;

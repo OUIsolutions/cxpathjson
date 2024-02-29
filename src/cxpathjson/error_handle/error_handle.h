@@ -25,6 +25,7 @@
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE  "middle element its not a object"
 #define  PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE "Element not exist"
 #define  PRIVATE_CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE "string %s its not a valid json"
+#define CXPATHJSON_IO_PROBLEM_MESSAGE "impossible to write in %s"
 
 #define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_MESSAGE "Append its not valid on read operations"
 
