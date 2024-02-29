@@ -18,6 +18,9 @@
 #define CXPATHJSON_ARRAY_TEXT "Array"
 
 
-int cxpathjson_type(CxpathJson * self, const char *format, ...);
+int CxpathJson_type(CxpathJson * self, const char *format, ...);
+
+bool CxpathJson_exist(CxpathJson * self, const char *format, ...);
+
 
 const char * CxpathJson_type_str(CxpathJson * self, const char *format, ...);
