@@ -8,7 +8,7 @@
 #define CXPATHJSON_OBJECT 5
 #define CXPATHJSON_ARRAY 6
 
-#define CXPATHJSON_INVALID_TEXT "Invalid"
+#define CXPATHJSON_NOT_FOUND_TEXT "not found"
 #define CXPATHJSON_NULL_TEXT "Null"
 
 #define CXPATHJSON_STRING_TEXT  "String"
