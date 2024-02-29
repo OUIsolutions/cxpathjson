@@ -28,33 +28,11 @@ char *  CxpathJson_get_error_message(CxpathJson * self){
     if(!self->error_code){
         return NULL;
     }
-
-    if(self->full_error_message){
-        return self->full_error_message;
-    }
-
-    if(!self->error_path_str){
-        return self->error_message;
-    }
-
-    if(!self->error_message){
-        return NULL;
-    }
+    return self->error_message;
 
 
-    self->full_error_message = (char *) malloc(
 
-            strlen(self->error_path_str) +
-            strlen(self->error_message) +
-            strlen(PRIVATE_CPATHJSON_ON_PATH_FORMAT) + 2
-    );
-    sprintf(self->full_error_message,
-            PRIVATE_CPATHJSON_ON_PATH_FORMAT,
-            self->error_message,
-            self->error_path_str
-    );
 
-    return self->full_error_message;
 
 }
 
@@ -73,9 +51,10 @@ void CxpathJson_clear_errors(CxpathJson * self){
         free(self->error_path_str);
     }
 
-    if(self->full_error_message){
-        free(self->full_error_message);
-    }
+
 
     self->error_code = CXPATHJSON_OK_CODE;
+}
+char * CxpathJson_get_error_path(CxpathJson * self){
+    return  self->error_path_str;
 }

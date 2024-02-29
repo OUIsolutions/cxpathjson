@@ -1,15 +1,24 @@
 
-int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *path_list){
-    if(!element){
-        return  CXPATHJSON_ELEMENT_PATH_NOT_EXIST_CODE;
-    }
+int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON *path_list){
+
     int path_size = cJSON_GetArraySize(path_list);
 
     if(path_size == 0){
-        return  CXPATHJSON_ARG_PATH_NOT_VALID_CODE;
+        char *dumped = cJSON_Print(path_list);
+        if(self->raise_runtime_errors){
+            CxpathJson_raise_errror(
+                    self,
+                    CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
+                    path_list,
+                    PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
+                    dumped
+            );
+        }
+        free(dumped);
+        return CXPATHJSON_GENERIC_ERROR;
     }
 
-    cJSON *current_element = element;
+    cJSON *current_element = self->element;
     for(int i = 0;i <path_size;i++){
 
 
@@ -28,14 +37,42 @@ int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *p
 
 
         if(current_its_iterable == false) {
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_COD;
+            if(self->raise_runtime_errors){
+                CxpathJson_raise_errror(
+                        self,
+                        CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_CODE,
+                        path_list,
+                        PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ITERABLE_MESSAGE
+                );
+            }
+            return  CXPATHJSON_GENERIC_ERROR;
         }
 
         if(path_must_be_an_object && current_its_object == false){
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE;
+            if(self->raise_runtime_errors){
+                CxpathJson_raise_errror(
+                        self,
+                        CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_CODE,
+                        path_list,
+                        PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_OBJECT_MESSAGE
+                );
+            }
+
+            return CXPATHJSON_GENERIC_ERROR;
+
         }
+
         if(path_must_be_an_array && current_is_an_array == false){
-            return  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE;
+            if(self->raise_runtime_errors){
+                CxpathJson_raise_errror(
+                        self,
+                        CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE,
+                        path_list,
+                        PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE
+                );
+            }
+
+            return  CXPATHJSON_GENERIC_ERROR;
         }
 
         if(current_its_object){
@@ -52,19 +89,20 @@ int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *p
             current_element = cJSON_GetArrayItem(current_element,index);
         }
     }
-
     return CXPATHJSON_OK_CODE;
 
 
 }
-int private_cxpathjson_set_cjson_by_path_list(cJSON *element, cJSON *value, cJSON *path_list) {
+void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, cJSON *path_list) {
 
-    cJSON *current_element = element;
 
-    int error  = private_cxpathjson_verifiy_if_insertion_is_possible(element, path_list);
-    if(error){
-        return  error;
+    private_CxpathJson_verifiy_if_insertion_is_possible(self, path_list);
+
+    if(CxpathJson_get_error_code(self)){
+        return;
     }
+
+    cJSON *current_element = self->element;
     int path_size = cJSON_GetArraySize(path_list);
 
     for(int i = 0;i <path_size-1;i++){
@@ -151,10 +189,9 @@ int private_cxpathjson_set_cjson_by_path_list(cJSON *element, cJSON *value, cJSO
 
     }
 
-    return CXPATHJSON_OK_CODE;
 }
 
-int private_cxpathjson_set_cjson_by_va_arg(cJSON *element, cJSON *value, const char *format, va_list args){
+void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, const char *format, va_list args){
 
     char buffer[2000] = {0};
     vsnprintf(buffer, sizeof(buffer), format, args);
@@ -162,13 +199,22 @@ int private_cxpathjson_set_cjson_by_va_arg(cJSON *element, cJSON *value, const c
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
     if(private_cxpathjson_validate_path(parsed_path)){
-        cJSON_Delete(parsed_path);
-        return  CXPATHJSON_ARG_PATH_NOT_VALID_CODE;
-    }
+        //we raise here beacause bad formatting its consider a comptime error
+        CxpathJson_raise_errror(self,
+                                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
+                                NULL,
+                                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
+                                buffer
+        );
 
-    int result = private_cxpathjson_set_cjson_by_path_list(element, value, parsed_path);
+
+        cJSON_Delete(parsed_path);
+        return ;
+
+    }
+    private_cxpathjson_set_cjson_by_path_list(self, value, parsed_path);
     cJSON_Delete(parsed_path);
-    return  result;
+    return ;
 
 }
 
@@ -176,7 +222,7 @@ int private_cxpathjson_set_cjson_by_va_arg(cJSON *element, cJSON *value, const c
 int cxpathjson_set_cjson(cJSON *element, cJSON *value, const char *format, ...){
     va_list args = {0};
     va_start(args, format);
-    int result = private_cxpathjson_set_cjson_by_va_arg(element, value, format, args);
+    int result = private_CxpathJson_set_cjson_by_va_arg(element, value, format, args);
     va_end(args);
     return  result;
 }
@@ -184,7 +230,7 @@ int cxpathjson_set_str(cJSON *element, const char *string, const char *format, .
     va_list args = {0};
     va_start(args, format);
     cJSON *value = cJSON_CreateString(string);
-    int result = private_cxpathjson_set_cjson_by_va_arg(element, value, format, args);
+    int result = private_CxpathJson_set_cjson_by_va_arg(element, value, format, args);
     if(result){
         cJSON_Delete(value);
     }

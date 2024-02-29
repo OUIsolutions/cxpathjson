@@ -9,8 +9,11 @@ int  main(){
     int b = CxpathJson_get_int(t,"['a','b']");
     CxpathJson_catch(t){
         char *message = CxpathJson_get_error_message(t);
-        printf("%s",message);
-
+        printf("error:%s\n",message);
+        char *path = CxpathJson_get_error_path(t);
+        if(path){
+            printf("path:%s\n",path);
+        }
     }
     CxpathJson_protected(t){
         printf("%d\n",b);
