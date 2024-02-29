@@ -23,7 +23,7 @@ int main(){
     if(!errors.has_errors(t)){
         printf("b0: %s\n",b0);
     }
-    
+
     if(errors.has_errors(t)){
         char *message =errors.get_error_message(t);
         int code = errors.get_error_code(t);
