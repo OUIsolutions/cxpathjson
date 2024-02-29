@@ -9,7 +9,7 @@ int  main(){
 
 
   //  xpath.set_str(t,"aaaaaaaaa","['a','c']");
-    xpath.set_str(t,"aaaaaaaaa","['a','d','$append','$append']");
+    xpath.set_str(t,"aaaaaaaaa","['a','d']");
 
     if(xpath.errors.has_errors(t)){
         printf("%s",xpath.errors.get_error_message(t));
