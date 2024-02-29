@@ -491,9 +491,9 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 
 void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, cJSON *path_list);
 
-void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, const char *format, va_list args);
+void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, cJSON *value, const char *format, va_list args);
 
-void CxpathJson_set_cjson(CxpathJson *self, cJSON *value, const char *format, ...);
+void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...);
 
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...);
 
@@ -4700,7 +4700,7 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 
 
 
-void CxpathJson_set_cjson(CxpathJson *self, cJSON *value, const char *format, ...){
+void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
     }
@@ -4906,7 +4906,7 @@ void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, c
 
 }
 
-void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, const char *format, va_list args){
+void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, cJSON *value, const char *format, va_list args){
     if(CxpathJson_get_error_code(self)){
         return;
     }

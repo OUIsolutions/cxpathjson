@@ -101,7 +101,7 @@ void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, c
 
 }
 
-void private_CxpathJson_set_cjson_by_va_arg(CxpathJson *self, cJSON *value, const char *format, va_list args){
+void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, cJSON *value, const char *format, va_list args){
     if(CxpathJson_get_error_code(self)){
         return;
     }
