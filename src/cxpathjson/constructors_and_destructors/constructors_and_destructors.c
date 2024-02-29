@@ -32,7 +32,7 @@ CxpathJson * newCxpathJson_from_string( const char *data){
 }
 
 
-CxpathJson * newCxpathJson__from_file( const char *path){
+CxpathJson * newCxpathJson_from_file(const char *path){
 
     char *content = private_cxpathjson_read_file(path);
     if(!content){

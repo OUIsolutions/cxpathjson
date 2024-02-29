@@ -34,13 +34,14 @@ char *  CxpathJson_get_error_message(CxpathJson * self){
     }
 
     if(!self->error_path_str){
-        return self->error_path_str;
+        return self->error_message;
     }
 
     self->full_error_message = (char*)malloc(
             strlen(self->error_path_str) + strlen(self->error_message) + 2
             );
-    sprintf(PRIVATE_CPATHJSON_ON_PATH_FORMAT,self->error_message,self->error_path_str);
+
+    sprintf(self->full_error_message,PRIVATE_CPATHJSON_ON_PATH_FORMAT,self->error_message,self->error_path_str);
     return self->full_error_message;
 
 }

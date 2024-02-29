@@ -28,6 +28,9 @@
 
 #define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_MESSAGE "Append its not valid on read operations"
 
+#define  CxpathJson_catch(element) if(CxpathJson_get_error_code(element))
+
+#define  CxpathJson_protected(element) if(!CxpathJson_get_error_code(element))
 
 bool CxpathJson_get_error_code(CxpathJson * self);
 char * CxpathJson_get_error_message(CxpathJson * self);

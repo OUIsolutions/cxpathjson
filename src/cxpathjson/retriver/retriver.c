@@ -153,7 +153,7 @@ const char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
     return  result->valuestring;
 }
 
-double cxpathjson_get_double(CxpathJson * self, const char *format, ...){
+double CxpathJson_get_double(CxpathJson * self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return CXPATH_ERROR_NUM_RETURN;
     }
@@ -186,7 +186,7 @@ double cxpathjson_get_double(CxpathJson * self, const char *format, ...){
     return  result->valuedouble;
 }
 
-int cxpathjson_get_int( CxpathJson * self, const char *format, ...){
+int CxpathJson_get_int(CxpathJson * self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return CXPATH_ERROR_NUM_RETURN;
     }

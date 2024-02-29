@@ -10,9 +10,9 @@ cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
 const char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
 
-double cxpathjson_get_double(CxpathJson * self, const char *format, ...);
+double CxpathJson_get_double(CxpathJson * self, const char *format, ...);
 
-int cxpathjson_get_int(CxpathJson * self, const char *format, ...);
+int CxpathJson_get_int(CxpathJson * self, const char *format, ...);
 
 bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...);
 
