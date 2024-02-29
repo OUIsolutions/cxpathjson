@@ -23,6 +23,6 @@ test.generate_ouptut(reconstruct=RECONSTRUCT)
 test.start_test()
 
 create_exemples()
-markdown = ct.include_code_in_markdown('conf/README.md');
+markdown = ct.include_code_in_markdown('conf/README.md',save_file=False)
 with open('README.md','w') as arq:
     arq.write(markdown)
