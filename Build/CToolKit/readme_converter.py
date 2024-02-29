@@ -36,30 +36,10 @@ def get_code_reference(line:str)->str or None:
 def parse_readme_lexer(text:str)->list:
     constructed = []
     block = ''
-
-    inside_block = False
-    first_line_inside_block = False
+    
     lines = text.split('\n')
     for line in lines:
-        if inside_block:
-            if first_line_inside_block:
-
-                if line.strip() == '':
-                    continue
-
-                if line.startswith('~~~') or line .startswith('´´´'):
-                    first_line_inside_block = False
-                    continue
-                else:
-                    inside_block = False
-                    first_line_inside_block = False
-                    continue
-            if line.startswith('~~~') or line.startswith('´´´'):
-                inside_block = False
-                first_line_inside_block = False
-                continue
-            continue
-
+      
         ref = get_code_reference(line)
 
         if ref:
@@ -92,7 +72,7 @@ def include_code_in_markdown(markdown_file:str,save_file:bool=True,modifier:Call
     text = ''
     with open(markdown_file,'r') as arq:
         lexer = parse_readme_lexer(arq.read())
-
+        print(lexer)
         for l in lexer:
             if l['type'] == 'block':
                 text+=l['text']
