@@ -334,7 +334,7 @@ const char * private_cxpathjson_convert_json_type_to_str(cJSON *element);
 
 
 
-typedef struct {
+typedef struct CxpathJson{
 
     cJSON * element;
     bool raise_runtime_errors;

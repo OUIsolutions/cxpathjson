@@ -1,6 +1,6 @@
 
 
-typedef struct {
+typedef struct CxpathJson{
 
     cJSON * element;
     bool raise_runtime_errors;
