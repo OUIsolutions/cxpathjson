@@ -28,6 +28,7 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.destroy = CxpathJson_destroy;
 
 
+    self.free = CxpathJson_free;
     self.errors = newCxpathJsonErrorNamespace();
     self.types = newCxpathJsonTypeNamespace();
     return self;

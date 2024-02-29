@@ -63,7 +63,7 @@ CxpathJson * newCxpathJson_from_file(const char *path){
 }
 
 void CxpathJson_free(CxpathJson * self){
-    CxpathJson_clear_errors(self);
+   CxpathJson_clear_errors(self);
     if(self->element){
         cJSON_Delete(self->element);
     }

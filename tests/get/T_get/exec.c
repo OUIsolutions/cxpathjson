@@ -1,45 +1,27 @@
 
-#include "../../CxpathJson.h"
+#include "../../../CxpathJson.h"
 
 
 
-CHashNamespace hash;
-CHashObjectModule  obj;
-CHashArrayModule  array;
-CHashValidatorModule validator;
+CxpathJsonNamespace xpath;
+CxpathJsonErrorNamespace errors;
 
-
-CHashObject *create (){
-    return newCHashArray(
-            hash.newString("aaa"),
-            hash.newNumber(26),
-            hash.newNumber(20),
-            hash.newBool(true)
-    );
-}
 
 int main(){
-    hash = newCHashNamespace();
-    obj = hash.object;
-    array  = hash.array;
-    validator = hash.validator;
-    CHashArray *element = create();
-
-    CHashArray_append(
-        element,
-       hash.newString("b"),
-       hash.newString("c")
-    );
-
-    if(!hash.errors(element)){
-        hash.print(element);
-
-    }
-    else{
-        printf("%s",hash.get_error_menssage(element));
-
+    xpath = newCxpathJsonNamespace();
+    errors = xpath.errors;
+    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    int content = xpath.get_int(t,"['a','b']");
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
     }
 
-    hash.free(element);
+    printf("%d",content);
+    xpath.free(t);
 
 }
