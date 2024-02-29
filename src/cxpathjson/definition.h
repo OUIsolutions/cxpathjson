@@ -4,5 +4,6 @@
 #include "retriver/retriver.c"
 #include "setters/verifier.c"
 #include "setters/setters.c"
+#include "setters/basic.c"
 #include "dump/dump.c"
 #include "destroy/destroy.c"

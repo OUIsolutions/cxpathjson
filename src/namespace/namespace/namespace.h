@@ -24,6 +24,7 @@ typedef struct {
 
     void (*set_cjson)(CxpathJson *self, cJSON *value, const char *format, ...);
     void (*set_str)(CxpathJson *self, const char *value, const char *format, ...);
+    void (*set_str_getting_ownership)(CxpathJson *self, char *value, const char *format, ...);
     void (*set_double)(CxpathJson *self, double value, const char *format, ...);
     void (*set_long)(CxpathJson *self, long value, const char *format, ...);
     void (*set_bool)(CxpathJson *self, bool value, const char *format, ...);

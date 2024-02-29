@@ -101,8 +101,8 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
                     path_list,
                             PRIVATE_CXPATHJSON_ELEMENT_PATH_NOT_EXIST_MESSAGE
                     );
-
                 }
+
                 return  CXPATHJSON_GENERIC_ERROR;
             }
         }
