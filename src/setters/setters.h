@@ -1,6 +1,4 @@
-#ifndef CXPATHJSON_APPEND_KEY
-#define CXPATHJSON_APPEND_KEY "$append"
-#endif
+
 
 int private_cxpathjson_verifiy_if_insertion_is_possible(cJSON *element, cJSON *path_list);
 
