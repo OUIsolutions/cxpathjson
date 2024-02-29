@@ -2,6 +2,7 @@
 #include "constructors_and_destructors/constructors_and_destructors.c"
 #include "error_handle/error_handle.c"
 #include "retriver/retriver.c"
+#include "setters/verifier.c"
 #include "setters/setters.c"
 #include "dump/dump.c"
 #include "destroy/destroy.c"
