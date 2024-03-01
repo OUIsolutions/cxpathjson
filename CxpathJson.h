@@ -4378,7 +4378,6 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }
-
     if(!cJSON_IsArray(result)){
         if(self->raise_runtime_errors){
             char buffer[2000] = {0};
@@ -4393,7 +4392,7 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
                     parsed_path,
                     PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
                     private_cxpathjson_convert_json_type_to_str(result),
-                    CXPATHJSON_OBJECT_TEXT
+                    CXPATHJSON_ARRAY_TEXT
             );
             cJSON_Delete(parsed_path);
         }

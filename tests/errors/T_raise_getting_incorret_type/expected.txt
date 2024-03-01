@@ -1,2 +1,3 @@
  
-9-element has type Number instead of String
+code: 9
+message: element has type Number instead of String
