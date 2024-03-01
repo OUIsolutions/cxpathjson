@@ -81,10 +81,13 @@ CxpathJson * newCxpathJson_from_file(const char *path){
 
 void CxpathJson_free(CxpathJson * self){
     //means its root element
-    if(self->element && !self->private_root){
+    if(!self->private_root){
         CxpathJson_clear_errors(self);
-        cJSON_Delete(self->element);
+        if(self->element){
+            cJSON_Delete(self->element);
+        }
     }
+
     for(int i = 0; i < self->size; i++){
         struct CxpathJson  *current_child = self->childs[i];
         CxpathJson_free((CxpathJson *) current_child);
