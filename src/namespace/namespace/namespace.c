@@ -30,7 +30,7 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
 
     self.set_xpathJson_getting_onwership =CxpathJson_set_xpathJson_getting_onwership;
     self.set_xpath_by_reference = CxpathJson_set_xpath_by_reference;
-    
+
     self.set_default_bool = CxpathJson_set_default_bool;
     self.set_default_int = CxpathJson_set_default_int;
     self.set_default_double = CxpathJson_set_default_double;

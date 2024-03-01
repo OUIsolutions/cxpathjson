@@ -493,7 +493,12 @@ void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, c
 
 void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, cJSON *value, const char *format, va_list args);
 
+
 void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...);
+
+void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *value, const char *format, ...);
+
+void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, const char *format, ...);
 
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...);
 
@@ -638,6 +643,8 @@ typedef struct {
     void (*set_double)(CxpathJson *self, double value, const char *format, ...);
     void (*set_int)(CxpathJson *self, int value, const char *format, ...);
     void (*set_bool)(CxpathJson *self, bool value, const char *format, ...);
+    void (*set_xpathJson_getting_onwership)(CxpathJson *self, CxpathJson *value, const char *format, ...);
+    void (*set_xpath_by_reference)(CxpathJson *self, CxpathJson *value, const char *format, ...);
 
     void (*set_default_cjson_getting_ownership)(CxpathJson *self, cJSON *value, const char *format, ...);
     void (*set_default_str_getting_onwership)(CxpathJson *self,  char *value, const char *format, ...);
@@ -4742,6 +4749,31 @@ void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, cons
 
 }
 
+void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *value, const char *format, ...){
+
+    if(CxpathJson_get_error_code(self)){
+        CxpathJson_free(value);
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value->element, format, args);
+    va_end(args);
+     CxpathJson_free(value);
+}
+
+void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    cJSON *copy = cJSON_Duplicate(value->element,true);
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, copy, format, args);
+    va_end(args);
+}
+
+
 void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
@@ -4920,6 +4952,7 @@ void private_cxpathjson_set_cjson_by_path_list(CxpathJson *self, cJSON *value, c
 
 void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, cJSON *value, const char *format, va_list args){
     if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
         return;
     }
     char buffer[2000] = {0};
@@ -4938,7 +4971,7 @@ void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, 
                                 buffer
         );
 
-
+        cJSON_Delete(value);
         cJSON_Delete(parsed_path);
         return ;
 
@@ -5287,6 +5320,9 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.set_str  = CxpathJson_set_str;
     self.set_str_getting_ownership = CxpathJson_set_str_getting_ownership;
     self.set_cjson_getting_ownership = CxpathJson_set_cjson_getting_ownership;
+
+    self.set_xpathJson_getting_onwership =CxpathJson_set_xpathJson_getting_onwership;
+    self.set_xpath_by_reference = CxpathJson_set_xpath_by_reference;
 
     self.set_default_bool = CxpathJson_set_default_bool;
     self.set_default_int = CxpathJson_set_default_int;

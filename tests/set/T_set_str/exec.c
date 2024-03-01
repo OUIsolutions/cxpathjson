@@ -10,8 +10,7 @@ int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
     CxpathJson *t = xpath.newJsonObject();
-    char *heap_str = strdup("Hello World");
-    xpath.set_str(t, heap_str,"['a', 'b']");
+    xpath.set_str(t, "Hello World","['a', 'b']");
 
     char *result = xpath.dump_to_string(t, false);
     printf("%s",result);

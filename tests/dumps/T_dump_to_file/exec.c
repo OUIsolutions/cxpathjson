@@ -8,7 +8,8 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t,"test","['a']['b']");
     xpath.dump_to_file(t,"side_effect/b.json", true);
     xpath.free(t);
     printf("OK");

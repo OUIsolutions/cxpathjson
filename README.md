@@ -27,8 +27,18 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
     int content = xpath.get_int(t,"['a','b']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
+
     printf("%d",content);
     xpath.free(t);
 
@@ -76,8 +86,21 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
+    
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
+    char *dumped = xpath.dump_to_string(t,true);
+    printf("%s",dumped);
     xpath.free(t);
+    free(dumped);
+    
     printf("OK");
 }
 ~~~
@@ -173,8 +196,18 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
     int content = xpath.get_int(t,"['a','b']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
+
     printf("%d",content);
     xpath.free(t);
 
@@ -196,9 +229,19 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    double content = xpath.get_double(t,"['h', 0]");
-    printf("%.10lf",content);
+    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
+    double content = xpath.get_double(t,"['a','b']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
+
+    printf("%lf",content);
     xpath.free(t);
 
 }
@@ -219,8 +262,17 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    char  *content = xpath.get_str(t,"['c', 1, 'e']");
+    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
+    char  *content = xpath.get_str(t,"['a', b]");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
     printf("%s",content);
     xpath.free(t);
 
@@ -242,8 +294,17 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    bool content = xpath.get_bool(t,"['f', 'g']");
+    CxpathJson *t = xpath.new_from_file("tests/target/bool.json");
+    bool content = xpath.get_bool(t,"['a', 'b']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
     printf("%d",content);
     xpath.free(t);
 
@@ -266,9 +327,18 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    CxpathJson *a = xpath.get_array(t, "['o']");
+    CxpathJson *t = xpath.new_from_file("tests/target/array.json");
+    CxpathJson *a = xpath.get_array(t, "['a']['b']");
     char  *a1 =xpath.get_str(a,"[0]");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
     printf("%s\n",a1);
     xpath.free(t);
 
@@ -290,9 +360,19 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    CxpathJson *a = xpath.get_object(t, "['m']");
-    char *a1 = xpath.get_str(a,"['n']");
+    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
+    CxpathJson *a = xpath.get_object(t, "['a']");
+    char *a1 = xpath.get_str(a,"['b']");
+    
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
+
     printf("%s",a1);
     xpath.free(t);
 
@@ -314,9 +394,18 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    CxpathJson *a = xpath.get_array(t, "['o']");
+    CxpathJson *t = xpath.new_from_file("tests/target/array.json");
+    CxpathJson *a = xpath.get_array(t, "['a']['b']");
     char  *a1 =xpath.get_str(a,"[0]");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
     printf("%s\n",a1);
     xpath.free(t);
 
@@ -338,8 +427,17 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    int content = xpath.size(t,"['c']");
+    CxpathJson *t = xpath.new_from_file("tests/target/array.json");
+    int content = xpath.size(t,"['a','b']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("%d",code);
+        printf("%s",message);
+        xpath.free(t);
+        return 0;
+    }
     printf("%d",content);
     xpath.free(t);
 
@@ -365,23 +463,15 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    double content = xpath.get_int(t,"['h', 0]");
-    xpath.set_int(t,543,"['h', 0]");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_int(t,10 ,"['a', 'b']");
 
-    xpath.dump_to_file(t,"tests/target/b.json", true);
-
-    CxpathJson *t2 = xpath.new_from_file("tests/target/b.json");
-    int content2 = xpath.get_int(t2,"['a', 'b']");
-
-    if (content2 != content)
-    {
-        printf("diff");
-    }else {
-        printf("identical");
-    }
+    char *result = xpath.dump_to_string(t, false);
+    printf("%s",result);
     xpath.free(t);
-    xpath.free(t2);
+    free(result);
+
+
 
 }
 ~~~
@@ -400,25 +490,15 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    bool content = xpath.get_bool(t,"['f', 'g']");
-    
-    xpath.set_bool(t,true ,"['f', 'g']");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_double(t,40 ,"['a', 'b']");
 
-    xpath.dump_to_file(t,"tests/target/b.json", true);
-
-    CxpathJson *t2 = xpath.new_from_file("tests/target/b.json");
-    bool content2 = xpath.get_bool(t2,"['f', 'g']");
-
-
-    if (content2 != content)
-    {
-        printf("diff");
-    }else {
-        printf("identical");
-    }
+    char *result = xpath.dump_to_string(t, false);
+    printf("%s",result);
     xpath.free(t);
-    xpath.free(t2);
+    free(result);
+
+
 
 }
 ~~~
@@ -437,23 +517,15 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    char *content = xpath.get_str(t,"['c', 1, 'e']");
-    xpath.set_str(t,"new_value3" ,"['c', 1, 'e']");
-    xpath.dump_to_file(t,"tests/target/b.json", true);
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t, "Hello World","['a', 'b']");
 
-    CxpathJson *t2 = xpath.new_from_file("tests/target/b.json");
-    char *content2 = xpath.get_str(t2,"['c', 1, 'e']");
-
-
-    if (content2 != content)
-    {
-        printf("diff");
-    }else {
-        printf("identical");
-    }
+    char *result = xpath.dump_to_string(t, false);
+    printf("%s",result);
     xpath.free(t);
-    xpath.free(t2);
+    free(result);
+
+
 
 }
 ~~~
@@ -472,24 +544,14 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
-    bool content = xpath.get_bool(t,"['f', 'g']");
-    
-    xpath.set_bool(t,true ,"['f', 'g']");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_bool(t,true ,"['a', 'b']");
 
-    xpath.dump_to_file(t,"tests/target/b.json", true);
-
-    CxpathJson *t2 = xpath.new_from_file("tests/target/b.json");
-    bool content2 = xpath.get_bool(t2,"['f', 'g']");
-
-    if (content2 != content)
-    {
-        printf("diff");
-    }else {
-        printf("identical");
-    }
+    char *result = xpath.dump_to_string(t, false);
+    printf("%s",result);
     xpath.free(t);
-    xpath.free(t2);
+    free(result);
+
 
 }
 ~~~
@@ -511,7 +573,8 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t,"test","['a']['b']");
     xpath.dump_to_file(t,"side_effect/b.json", true);
     xpath.free(t);
     printf("OK");
@@ -532,11 +595,13 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t,"teste","['a']['b']");
     char *content = xpath.dump_to_string(t, false);
     printf("%s", content);
     xpath.free(t);
     free(content);
+
     
 
 }
@@ -559,7 +624,7 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/a.json");
+    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
     char  *content = xpath.get_str(t,"['c', 1, 'd']");
     if(errors.has_errors(t)){
         char *message =errors.get_error_message(t);
