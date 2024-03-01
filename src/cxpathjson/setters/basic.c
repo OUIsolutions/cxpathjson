@@ -110,7 +110,7 @@ void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, 
     private_cxpathjson_replace_comas(buffer);
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
-    if(private_cxpathjson_validate_path(parsed_path)){
+    if(private_cxpathjson_validate_path_all(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson  *root = private_CxpathJson_get_root(self);
 

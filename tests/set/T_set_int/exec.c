@@ -1,5 +1,5 @@
 
-#include "CxpathJson.h"
+#include "../../../CxpathJson.h"
 
 
 CxpathJsonNamespace xpath;
@@ -11,7 +11,7 @@ int main(){
     errors = xpath.errors;
     CxpathJson *t = xpath.new_from_file("tests/target/a.json");
     double content = xpath.get_int(t,"['h', 0]");
-    xpath.set_long(t,543,"['h', 0]");
+    xpath.set_int(t,543,"['h', 0]");
 
     xpath.dump_to_file(t,"tests/target/b.json", true);
 

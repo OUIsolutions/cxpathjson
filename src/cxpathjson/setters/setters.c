@@ -2,12 +2,19 @@
 
 void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
         return;
     }
+
     va_list args;
     va_start(args, format);
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value, format, args);
     va_end(args);
+
+    if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
+        return;
+    }
 
 }
 
@@ -21,15 +28,10 @@ void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const 
     cJSON *value_cjson = cJSON_New_Item(&global_hooks);
     value_cjson->type = cJSON_String;
     value_cjson->valuestring = value;
-
-
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...){
@@ -44,11 +46,6 @@ void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format,
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
-
-    }
-
 }
 
 void CxpathJson_set_double(CxpathJson *self, double value, const char *format, ...){
@@ -62,13 +59,10 @@ void CxpathJson_set_double(CxpathJson *self, double value, const char *format, .
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
-void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...){
+void CxpathJson_set_int(CxpathJson *self, int value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
     }
@@ -79,10 +73,7 @@ void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...){
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
 void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
@@ -96,8 +87,5 @@ void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }

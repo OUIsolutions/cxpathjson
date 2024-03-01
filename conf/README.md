@@ -80,8 +80,8 @@ To get a value from the json object, you can use a range of functions. The funct
 Every `set` function gets 3 parameters: the json object, the value to set and the path string.
 To set a value in the json object, you can use a range of functions. The functions are:
 
-- `set_long` to set an integer.
-<!--codeof:exemples/set/set_long.c -->
+- `set_int` to set an integer.
+<!--codeof:exemples/set/set_int.c -->
 
 - `set_double` to set a double.
 <!--codeof:exemples/set/set_double.c -->

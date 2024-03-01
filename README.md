@@ -351,8 +351,8 @@ int main(){
 Every `set` function gets 3 parameters: the json object, the value to set and the path string.
 To set a value in the json object, you can use a range of functions. The functions are:
 
-- `set_long` to set an integer.
-<!--codeof:exemples/set/set_long.c-->
+- `set_int` to set an integer.
+<!--codeof:exemples/set/set_int.c-->
 ~~~c
 
 #include "CxpathJson.h"
@@ -367,7 +367,7 @@ int main(){
     errors = xpath.errors;
     CxpathJson *t = xpath.new_from_file("tests/target/a.json");
     double content = xpath.get_int(t,"['h', 0]");
-    xpath.set_long(t,543,"['h', 0]");
+    xpath.set_int(t,543,"['h', 0]");
 
     xpath.dump_to_file(t,"tests/target/b.json", true);
 

@@ -501,9 +501,23 @@ void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const 
 
 void CxpathJson_set_double(CxpathJson *self, double value, const char *format, ...);
 
-void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...);
+void CxpathJson_set_int(CxpathJson *self, int value, const char *format, ...);
 
 void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...);
+
+
+void CxpathJson_set_default_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...);
+
+void CxpathJson_set_default_str_getting_onwership(CxpathJson *self,  char *value, const char *format, ...);
+
+
+void CxpathJson_set_default_str(CxpathJson *self, const char *value, const char *format, ...);
+
+void CxpathJson_set_default_double(CxpathJson *self, double value, const char *format, ...);
+
+void CxpathJson_set_default_int(CxpathJson *self, int value, const char *format, ...);
+
+void CxpathJson_set_default_bool(CxpathJson *self, bool value, const char *format, ...);
 
 
 
@@ -536,8 +550,10 @@ bool private_cxpathjson_path_is_append(cJSON *current_path);
 #ifndef CXPATHJSON_APPEND_KEY
 #define CXPATHJSON_APPEND_KEY "$append"
 #endif
-int private_cxpathjson_validate_path(cJSON *path);
 
+int private_cxpathjson_validate_path_all(cJSON *path);
+
+int private_cxpathjson_validate_path_read_only(cJSON *path);
 
 void private_cxpathjson_replace_comas(char *result);
 
@@ -616,12 +632,23 @@ typedef struct {
     CxpathJson  * (*get_array)(CxpathJson * self, const char *format, ...);
 
 
-    void (*set_cjson)(CxpathJson *self, cJSON *value, const char *format, ...);
+    void (*set_cjson_getting_ownership)(CxpathJson *self, cJSON *value, const char *format, ...);
     void (*set_str)(CxpathJson *self, const char *value, const char *format, ...);
     void (*set_str_getting_ownership)(CxpathJson *self, char *value, const char *format, ...);
     void (*set_double)(CxpathJson *self, double value, const char *format, ...);
-    void (*set_long)(CxpathJson *self, long value, const char *format, ...);
+    void (*set_int)(CxpathJson *self, int value, const char *format, ...);
     void (*set_bool)(CxpathJson *self, bool value, const char *format, ...);
+
+    void (*set_default_cjson_getting_ownership)(CxpathJson *self, cJSON *value, const char *format, ...);
+    void (*set_default_str_getting_onwership)(CxpathJson *self,  char *value, const char *format, ...);
+    void (*set_default_str)(CxpathJson *self, const char *value, const char *format, ...);
+    void (*set_default_double)(CxpathJson *self, double value, const char *format, ...);
+    void (*set_default_int)(CxpathJson *self, int value, const char *format, ...);
+    void (*set_default_bool)(CxpathJson *self, bool value, const char *format, ...);
+
+
+
+
     void (*destroy)(CxpathJson *self,const char *format, ...);
 
 
@@ -4254,7 +4281,7 @@ cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *for
     private_cxpathjson_replace_comas(buffer);
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
-    if(private_cxpathjson_validate_path(parsed_path)){
+    if(private_cxpathjson_validate_path_read_only(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson  *root = private_CxpathJson_get_root(self);
         CxpathJson_raise_errror(root,
@@ -4699,12 +4726,19 @@ int private_CxpathJson_verifiy_if_insertion_is_possible(CxpathJson *self, cJSON 
 
 void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
         return;
     }
+
     va_list args;
     va_start(args, format);
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value, format, args);
     va_end(args);
+
+    if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
+        return;
+    }
 
 }
 
@@ -4718,15 +4752,10 @@ void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const 
     cJSON *value_cjson = cJSON_New_Item(&global_hooks);
     value_cjson->type = cJSON_String;
     value_cjson->valuestring = value;
-
-
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...){
@@ -4741,11 +4770,6 @@ void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format,
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
-
-    }
-
 }
 
 void CxpathJson_set_double(CxpathJson *self, double value, const char *format, ...){
@@ -4759,13 +4783,10 @@ void CxpathJson_set_double(CxpathJson *self, double value, const char *format, .
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
-void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...){
+void CxpathJson_set_int(CxpathJson *self, int value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
     }
@@ -4776,10 +4797,7 @@ void CxpathJson_set_long(CxpathJson *self, long value, const char *format, ...){
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
 void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
@@ -4793,10 +4811,7 @@ void CxpathJson_set_bool(CxpathJson *self, bool value, const char *format, ...){
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
     va_end(args);
 
-    if(CxpathJson_get_error_code(self)){
-        cJSON_Delete(value_cjson);
 
-    }
 }
 
 
@@ -4912,7 +4927,7 @@ void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, 
     private_cxpathjson_replace_comas(buffer);
     cJSON *parsed_path  = cJSON_Parse(buffer);
 
-    if(private_cxpathjson_validate_path(parsed_path)){
+    if(private_cxpathjson_validate_path_all(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson  *root = private_CxpathJson_get_root(self);
 
@@ -4933,6 +4948,96 @@ void private_CxpathJson_set_cjson_by_va_arg_getting_ownership(CxpathJson *self, 
 
 }
 
+
+
+
+void CxpathJson_set_default_cjson_getting_ownership(CxpathJson *self, cJSON *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+
+    bool old_config = self->raise_runtime_errors;
+    self->raise_runtime_errors = false;
+    cJSON *old = private_CxpathJson_get_cJSON_by_vargs(self,format,args);
+    self->raise_runtime_errors = old_config;
+
+    if(CxpathJson_get_error_code(self) || old){
+        cJSON_Delete(value);
+        return;
+    }
+
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value, format, args);
+    va_end(args);
+}
+void CxpathJson_set_default_str_getting_onwership(CxpathJson *self,  char *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_New_Item(&global_hooks);
+    value_cjson->type = cJSON_String;
+    value_cjson->valuestring = value;
+    CxpathJson_set_default_cjson_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+
+
+}
+void CxpathJson_set_default_str(CxpathJson *self, const char *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateString(value);
+    CxpathJson_set_default_cjson_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+
+}
+
+
+void CxpathJson_set_default_double(CxpathJson *self, double value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateNumber(value);
+    CxpathJson_set_default_cjson_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+
+}
+
+void CxpathJson_set_default_int(CxpathJson *self, int value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateNumber((double )value);
+    CxpathJson_set_default_cjson_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+
+}
+
+void CxpathJson_set_default_bool(CxpathJson *self, bool value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateBool(value);
+    CxpathJson_set_default_cjson_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+}
 
 
 
@@ -4987,7 +5092,7 @@ void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
     private_cxpathjson_replace_comas(buffer);
 
     cJSON *parsed_path  = cJSON_Parse(buffer);
-    if(private_cxpathjson_validate_path(parsed_path)){
+    if(private_cxpathjson_validate_path_read_only(parsed_path)){
         //we raise here beacause bad formatting its consider a comptime error
         CxpathJson_raise_errror(self,
                                 CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
@@ -5054,14 +5159,17 @@ bool private_cxpathjson_path_is_append(cJSON *current_path){
 
 }
 
-int private_cxpathjson_validate_path(cJSON *path){
+int private_cxpathjson_validate_path_all(cJSON *path){
 
+    const int NOT_PATH = 1 ;
+    const int NOT_ARRAY = 1;
+    const int WRONG_TYPE = 1;
     if(!path){
-        return 1;
+        return NOT_PATH;
     }
 
     if(!cJSON_IsArray(path)){
-        return 1;
+        return NOT_ARRAY;
     }
 
     int path_size = cJSON_GetArraySize(path);
@@ -5074,13 +5182,34 @@ int private_cxpathjson_validate_path(cJSON *path){
         if(cJSON_IsNumber(current)){
             continue;
         }
-        return  1;
+        return  WRONG_TYPE;
     }
-    return  0;
+    return  CXPATHJSON_OK_CODE;
 
 
 
 }
+
+int private_cxpathjson_validate_path_read_only(cJSON *path){
+    int first_test =  private_cxpathjson_validate_path_all(path);
+    if(first_test){
+        return first_test;
+    }
+    const int APPEND_NOT_VALID_IN_READ_ONY = 1;
+
+    int path_size = cJSON_GetArraySize(path);
+    for(int i = 0;i <path_size;i++){
+        cJSON *current = cJSON_GetArrayItem(path,i);
+        if(!cJSON_IsString(current)){
+            continue;
+        }
+        if(strcmp(current->valuestring,CXPATHJSON_APPEND_KEY) ==0){
+            return APPEND_NOT_VALID_IN_READ_ONY;
+        }
+    }
+    return CXPATHJSON_OK_CODE;
+}
+
 
 void private_cxpathjson_replace_comas(char *result){
     long size = strlen(result);
@@ -5153,11 +5282,19 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
 
 
     self.set_bool = CxpathJson_set_bool;
-    self.set_long = CxpathJson_set_long;
+    self.set_int = CxpathJson_set_int;
     self.set_double = CxpathJson_set_double;
-    self.set_cjson = CxpathJson_set_cjson_getting_ownership;
     self.set_str  = CxpathJson_set_str;
     self.set_str_getting_ownership = CxpathJson_set_str_getting_ownership;
+    self.set_cjson_getting_ownership = CxpathJson_set_cjson_getting_ownership;
+
+    self.set_default_bool = CxpathJson_set_default_bool;
+    self.set_default_int = CxpathJson_set_default_int;
+    self.set_default_double = CxpathJson_set_default_double;
+    self.set_default_str = CxpathJson_set_default_str;
+    self.set_default_str_getting_onwership = CxpathJson_set_default_str_getting_onwership;
+    self.set_default_cjson_getting_ownership = CxpathJson_set_default_cjson_getting_ownership;
+
     self.destroy = CxpathJson_destroy;
 
 

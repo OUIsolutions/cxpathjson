@@ -22,11 +22,19 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
 
 
     self.set_bool = CxpathJson_set_bool;
-    self.set_long = CxpathJson_set_long;
+    self.set_int = CxpathJson_set_int;
     self.set_double = CxpathJson_set_double;
-    self.set_cjson = CxpathJson_set_cjson_getting_ownership;
     self.set_str  = CxpathJson_set_str;
     self.set_str_getting_ownership = CxpathJson_set_str_getting_ownership;
+    self.set_cjson_getting_ownership = CxpathJson_set_cjson_getting_ownership;
+
+    self.set_default_bool = CxpathJson_set_default_bool;
+    self.set_default_int = CxpathJson_set_default_int;
+    self.set_default_double = CxpathJson_set_default_double;
+    self.set_default_str = CxpathJson_set_default_str;
+    self.set_default_str_getting_onwership = CxpathJson_set_default_str_getting_onwership;
+    self.set_default_cjson_getting_ownership = CxpathJson_set_default_cjson_getting_ownership;
+
     self.destroy = CxpathJson_destroy;
 
 
