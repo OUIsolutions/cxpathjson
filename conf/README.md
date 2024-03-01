@@ -10,10 +10,45 @@ For installation, simply copy the **CXpathJson.h** into your project and compile
 [Download Link]()
 
 # Usage
+In all examples, we will use the json files in the `tests/target` directory.
 
 ## example
-```c
+<!-- tests/get/get_int.c -->
 
+The code above is a simple example of how to get an integer from a json string using a path string. The path string is a string that represents the path to the value in the json string. The path string is a list of keys separated by a comma. For example, the path string `"['a', 'b', 'c']"` will get the value of the key `c` in the json string `{"a": {"b": {"c": 1}}}`.
+
+
+## Constructing a path
+The first step is to construct a path. You can do it by calling the `newCxpathJsonNamespace` as shown below.
+
+<!-- tests/constructors/construct_xpath.c -->
+
+Your next step is to create an error object and a json object. The error object will be used to store the error messages if the json string is invalid. The json object will be used to store the json string. You can read the json string from a file or from a string. In the example below, we read the json string from a file.
+You have 4 options to create a json object:
+- `new_from_file` to read the json string from a file.
+Example:
+<!-- tests/constructors/construct_json_object_from_file.c -->
+
+- `new_from_string` to read the json string from a string.
+Example:
+<!-- tests/constructors/construct_json_object_from_string.c -->
+
+- `newJsonArray` to create an empty json array.
+Example:
+<!-- tests/constructors/construct_json_object_array.c -->
+
+- `newJsonObject` to create an empty json object.
+Example:
+<!-- tests/constructors/construct_json_object_object.c -->
+
+**Important**: Note that every example already create the errors object. Every example also has a `free` function to free the memory allocated by the json object.
+
+## Get & Set
+From the json object, you can get and set values using the path string.
+
+### Get
+To get a value from the json object, you can use a range of functions. The functions are:
+- `get_int` to get an integer.
 
 
 

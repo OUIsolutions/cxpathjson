@@ -4027,12 +4027,10 @@ CxpathJson * newCxpathJsonObject(){
     return newCxpathJson_from_cJSON_getting_ownership(created);
 }
 
-
 CxpathJson * newCxpathJsonArray(){
     cJSON *created = cJSON_CreateArray();
     return newCxpathJson_from_cJSON_getting_ownership(created);
 }
-
 
 CxpathJson * newCxpathJson_from_string( const char *data){
     CxpathJson  *self = private_newCxpathJson();
@@ -4048,7 +4046,6 @@ CxpathJson * newCxpathJson_from_string( const char *data){
     }
     return  self;
 }
-
 
 CxpathJson * newCxpathJson_from_file(const char *path){
 
