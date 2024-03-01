@@ -13,9 +13,7 @@ int main(){
     CxpathJson *t = xpath.new_from_file("tests/target/a.json");
     CxpathJson *a = xpath.get_array(t, "['o']");
     char  *a1 =xpath.get_str(a,"[0]");
-    if(!errors.has_errors(t)){
-        printf("%s\n",a1);
-    }
+    printf("%s\n",a1);
     xpath.free(t);
 
 }

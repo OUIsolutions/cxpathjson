@@ -21,7 +21,4 @@ int main(){
         return 0;
     }
 
-    printf("%s",content);
-    xpath.free(t);
-
 }
