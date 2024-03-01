@@ -10,6 +10,7 @@ void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, cons
     va_end(args);
 
 }
+
 void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
@@ -30,6 +31,7 @@ void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const 
 
     }
 }
+
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...){
 
     if(CxpathJson_get_error_code(self)){
@@ -48,8 +50,6 @@ void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format,
     }
 
 }
-
-
 
 void CxpathJson_set_double(CxpathJson *self, double value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
