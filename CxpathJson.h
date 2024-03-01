@@ -4759,6 +4759,7 @@ void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *va
     va_start(args, format);
     private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value->element, format, args);
     va_end(args);
+    value->element = NULL;
      CxpathJson_free(value);
 }
 

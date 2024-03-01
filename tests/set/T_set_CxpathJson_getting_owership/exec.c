@@ -1,5 +1,6 @@
 
-#include "src/one.c"
+
+#include "../../../CxpathJson.h"
 
 
 CxpathJsonNamespace xpath;
@@ -15,11 +16,13 @@ int main(){
     CxpathJson *b = xpath.newJsonObject();
     xpath.set_str(b,"t2 value","['b1']");
 
+
     xpath.set_xpathJson_getting_onwership(a,b,"['b']");
 
     char *result = xpath.dump_to_string(a, false);
     printf("%s",result);
     xpath.free(a);
     free(result);
+
 
 }
