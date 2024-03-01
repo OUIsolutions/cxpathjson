@@ -18,6 +18,31 @@ void CxpathJson_set_cjson_getting_ownership(CxpathJson *self, cJSON *value, cons
 
 }
 
+void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *value, const char *format, ...){
+
+    if(CxpathJson_get_error_code(self)){
+        CxpathJson_free(value);
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value->element, format, args);
+    va_end(args);
+     CxpathJson_free(value);
+}
+
+void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    cJSON *copy = cJSON_Duplicate(value->element,true);
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, copy, format, args);
+    va_end(args);
+}
+
+
 void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;
