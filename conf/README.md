@@ -24,11 +24,11 @@ The first step is to construct a path. You can do it by calling the `newCxpathJs
 <!-- tests/constructors/construct_xpath.c -->
 
 Your next step is to create an error object and a json object. The error object will be used to store the error messages if the json string is invalid. The json object will be used to store the json string and you have 4 options to create a json object:
-- `new_from_file` to read the json string from a file.
+- `new_from_file` to read the json string from a file. This function receives 1 parameter: the file path.
 Example:
 <!-- tests/constructors/construct_json_object_from_file.c -->
 
-- `new_from_string` to read the json string from a string.
+- `new_from_string` to read the json string from a string. This function receives 1 parameter: the json string.
 Example:
 <!-- tests/constructors/construct_json_object_from_string.c -->
 
@@ -46,6 +46,9 @@ Example:
 From the json object, you can get and set values using the path string.
 
 ### Get
+Every `get` function gets 2 parameters: the json object and the path string. The first
+parameter is the json object and the second parameter is the path string. The path string is a list of keys separated by a comma. For example, the path string `"['a', 0, 'b']"` will get the value of the key `b` in the json string `{"a": [ {"b": 1} ]}`.
+
 To get a value from the json object, you can use a range of functions. The functions are:
 - `get_int` to get an integer.
 <!-- tests/get/get_int.c -->
@@ -73,6 +76,7 @@ To get a value from the json object, you can use a range of functions. The funct
 
 
 ### Set
+Every `set` function gets 3 parameters: the json object, the value to set and the path string.
 To set a value in the json object, you can use a range of functions. The functions are:
 
 - `set_long` to set an integer.
@@ -86,6 +90,16 @@ To set a value in the json object, you can use a range of functions. The functio
 
 - `set_bool` to set a boolean.
 <!-- tests/set/set_bool.c -->
+
+
+## Dumps
+You can dump the json object to a file using `dump_to_file` or to a string using `dump_to_string`.
+
+- `dump_to_file` to dump the json object to a file. The code below will dump the json object to create a file called `b.json`. This function receives 3 parameters: the json object, the file path and and boolean to indicate if the file should be idented.
+<!-- tests/dumps/dump_to_file.c -->
+
+- `dump_to_string` to dump the json object to a string. This function receives 2 parameters: the json object and a boolean to indicate if the string should be idented.
+<!-- tests/dumps/dump_to_string.c -->
 
 
 ## Error Handling
