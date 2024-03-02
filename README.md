@@ -224,6 +224,17 @@ int main(){
 ~~~
 
 #### Getting a sub object
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json-->
+~~~json
+{
+    "a":{
+        "b":"value"
+    }
+}
+~~~
+
 <!--codeof:exemples/get/get_object.c-->
 ~~~c
 
@@ -258,6 +269,19 @@ int main(){
 ~~~
 
 #### Getting a sub array
+
+**tests/target/array.json**:
+<!--codeof:tests/target/array.json-->
+~~~json
+
+{
+  "a":{
+      "b": ["test"]
+  }
+
+}
+~~~
+
 <!--codeof:exemples/get/get_array.c-->
 ~~~c
 
@@ -290,7 +314,22 @@ int main(){
 }
 ~~~
 
+
 #### Getting size 
+
+**tests/target/array.json**:
+<!--codeof:tests/target/array.json-->
+~~~json
+
+{
+  "a":{
+      "b": ["test"]
+  }
+
+}
+~~~
+
+
 - `size` to get the size of an array.
 <!--codeof:exemples/get/get_size.c-->
 ~~~c
@@ -324,6 +363,34 @@ int main(){
 ~~~
 
 ### Iterating over arrays 
+
+**tests/target/all_list.json**:
+<!--codeof:tests/target/all_list.json-->
+~~~json
+[{
+  "height": 1.79,
+  "name": "test1",
+  "age": 101,
+  "maried": false
+},
+{
+"height": 2.00,
+"name": "test2",
+"age": 11,
+"maried": true
+},
+  {
+    "height": 1.79,
+    "name": "test",
+    "age": 100,
+    "maried": false
+  }
+
+
+
+]
+~~~
+
 You can easly iterate over array by using **get_size** function
 
 <!--codeof:exemples/get/array_iteration.c-->
@@ -380,6 +447,33 @@ int main(){
 ### getting element array in reverse order
 if you pass a negative number (-1) for example, you can get the last element of an array 
 
+**tests/target/all_list.json**:
+<!--codeof:tests/target/all_list.json-->
+~~~json
+[{
+  "height": 1.79,
+  "name": "test1",
+  "age": 101,
+  "maried": false
+},
+{
+"height": 2.00,
+"name": "test2",
+"age": 11,
+"maried": true
+},
+  {
+    "height": 1.79,
+    "name": "test",
+    "age": 100,
+    "maried": false
+  }
+
+
+
+]
+~~~
+
 <!--codeof:exemples/get/last_one.c-->
 ~~~c
 
@@ -422,6 +516,18 @@ int main(){
 
 ### Types 
 you also can get type information about the current element 
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json-->
+~~~json
+{
+    "a":{
+        "b":"value"
+    }
+}
+~~~
+
+
 <!--codeof:exemples/extra/retriving_type.c-->
 ~~~c
 
@@ -546,6 +652,17 @@ int main(){
 
 ## Error Handling
 The library has a built-in error handling system. You can use the `error` object to get the error message if the json string is invalid. The error message will be stored in the `error` object. You can use the `error` object to get the error message as shown below.
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json-->
+~~~json
+{
+    "a":{
+        "b":"value"
+    }
+}
+~~~
+
 <!--codeof:exemples/errors/raise_element_not_exists.c-->
 ~~~c
 

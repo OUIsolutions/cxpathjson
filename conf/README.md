@@ -73,16 +73,34 @@ parameter is the json object and the second parameter is the path string. The pa
 <!--codeof:exemples/get/get_all.c -->
 
 #### Getting a sub object
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json -->
+
 <!--codeof:exemples/get/get_object.c -->
 
 #### Getting a sub array
+
+**tests/target/array.json**:
+<!--codeof:tests/target/array.json -->
+
 <!--codeof:exemples/get/get_array.c -->
 
+
 #### Getting size 
+
+**tests/target/array.json**:
+<!--codeof:tests/target/array.json -->
+
+
 - `size` to get the size of an array.
 <!--codeof:exemples/get/get_size.c -->
 
 ### Iterating over arrays 
+
+**tests/target/all_list.json**:
+<!--codeof:tests/target/all_list.json -->
+
 You can easly iterate over array by using **get_size** function
 
 <!--codeof:exemples/get/array_iteration.c -->
@@ -90,11 +108,19 @@ You can easly iterate over array by using **get_size** function
 ### getting element array in reverse order
 if you pass a negative number (-1) for example, you can get the last element of an array 
 
+**tests/target/all_list.json**:
+<!--codeof:tests/target/all_list.json -->
+
 <!--codeof:exemples/get/last_one.c -->
 
 
 ### Types 
 you also can get type information about the current element 
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json -->
+
+
 <!--codeof:exemples/extra/retriving_type.c -->
 
 
@@ -119,6 +145,10 @@ You can dump the json object to a file using `dump_to_file` or to a string using
 
 ## Error Handling
 The library has a built-in error handling system. You can use the `error` object to get the error message if the json string is invalid. The error message will be stored in the `error` object. You can use the `error` object to get the error message as shown below.
+
+**tests/target/str.json**:
+<!--codeof:tests/target/str.json -->
+
 <!--codeof:exemples/errors/raise_element_not_exists.c -->
 
 The code above will print the following error message:
