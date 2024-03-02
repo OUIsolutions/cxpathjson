@@ -9,15 +9,39 @@ For installation, simply copy the **CXpathJson.h** into your project and compile
 
 [Download Link](https://github.com/OUIsolutions/cxpathjson/releases/download/v0.1/CxpathJson.h)
 
+## full Folder 
+you also can download the entire **src** project and include with **src/one.c** 
+
+```c
+
+#include "src/one.c"
+
+CxpathJsonNamespace xpath;
+CxpathJsonErrorNamespace errors;
+
+
+int main(){
+    xpath = newCxpathJsonNamespace();
+    errors = xpath.errors;
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t,"hello world","['a']");
+    char *content = xpath.dump_to_string(t,true);
+    printf("%s",content);
+    free(content);
+    xpath.free(t);
+
+
+}
+```
+
 # Usage
 In all examples, we will use the json files in the `tests/target` directory.
 
-## example
-<!--codeof:exemples/get/get_int.c-->
+##  Basic hello world
+<!--codeof:exemples/extra/hello_world.c-->
 ~~~c
 
 #include "CxpathJson.h"
-
 
 
 CxpathJsonNamespace xpath;
@@ -27,50 +51,21 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
-    int content = xpath.get_int(t,"['a','b']");
-
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("code: %d\n",code);
-        printf("message: %s\n",message);
-        xpath.free(t);
-        return 0;
-    }
-
-    printf("%d",content);
+    CxpathJson *t = xpath.newJsonObject();
+    xpath.set_str(t,"hello world","['a']");
+    char *content = xpath.dump_to_string(t,true);
+    printf("%s",content);
+    free(content);
     xpath.free(t);
+
 
 }
 ~~~
-
-The code above is a simple example of how to get an integer from a json string using a path string. The path string is a string that represents the path to the value in the json string. The path string is a list of keys separated by a comma. For example, the path string `"['a', 'b', 'c']"` will get the value of the key `c` in the json string `{"a": {"b": {"c": 1}}}`.
 
 
 ## Constructing a path
-The first step is to construct a path. You can do it by calling the `newCxpathJsonNamespace` as shown below.
-
-<!--codeof:exemples/constructors/construct_xpath.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    printf("OK");
-
-}
-~~~
-
-Your next step is to create an error object and a json object. The error object will be used to store the error messages if the json string is invalid. The json object will be used to store the json string and you have 4 options to create a json object:
-- `new_from_file` to read the json string from a file. This function receives 1 parameter: the file path.
+For loading a function from a json file  you just need to call the function
+**xpath.new_from_file**  passing the json path
 Example:
 <!--codeof:exemples/constructors/construct_json_object_from_file.c-->
 ~~~c
@@ -104,6 +99,7 @@ int main(){
     printf("OK");
 }
 ~~~
+
 
 - `new_from_string` to read the json string from a string. This function receives 1 parameter: the json string.
 Example:
@@ -173,16 +169,11 @@ int main(){
 
 **Important**: Note that every example already create the errors object. Every example also has a `free` function to free the memory allocated by the json object.
 
-## Get & Set
-From the json object, you can get and set values using the path string.
-
 ### Get
 Every `get` function gets 2 parameters: the json object and the path string. The first
 parameter is the json object and the second parameter is the path string. The path string is a list of keys separated by a comma. For example, the path string `"['a', 0, 'b']"` will get the value of the key `b` in the json string `{"a": [ {"b": 1} ]}`.
 
-To get a value from the json object, you can use a range of functions. The functions are:
-- `get_int` to get an integer.
-<!--codeof:exemples/get/get_int.c-->
+<!--codeof:exemples/get/get_all.c-->
 ~~~c
 
 #include "CxpathJson.h"
@@ -196,8 +187,12 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
-    int content = xpath.get_int(t,"['a','b']");
+
+    CxpathJson *t = xpath.new_from_file("tests/target/all.json");
+    char *name = xpath.get_str(t,"['name']");
+    int age =xpath.get_int(t,"['age']");
+    bool maried = xpath.get_bool(t,"['maried']");
+    double height = xpath.get_double(t,"['height']");
 
     if(errors.has_errors(t)){
         char *message =errors.get_error_message(t);
@@ -207,145 +202,16 @@ int main(){
         xpath.free(t);
         return 0;
     }
-
-    printf("%d",content);
+    printf("name: %s\n",name);
+    printf("age: %d\n",age);
+    printf("height: %lf\n",height);
+    printf("maried: %s\n", maried ? "true": "false");
     xpath.free(t);
 
 }
 ~~~
 
-- `get_double` to get a double.
-<!--codeof:exemples/get/get_double.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/num.json");
-    double content = xpath.get_double(t,"['a','b']");
-
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("code: %d\n",code);
-        printf("message: %s\n",message);
-        xpath.free(t);
-        return 0;
-    }
-
-    printf("%lf",content);
-    xpath.free(t);
-
-}
-~~~
-
-- `get_str` to get a string.
-<!--codeof:exemples/get/get_str.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
-    char  *content = xpath.get_str(t,"['a', 'b']");
-
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("code: %d\n",code);
-        printf("message: %s\n",message);
-        xpath.free(t);
-        return 0;
-    }
-    printf("%s",content);
-    xpath.free(t);
-
-}
-~~~
-
-- `get_bool` to get a boolean.
-<!--codeof:exemples/get/get_bool.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/bool.json");
-    bool content = xpath.get_bool(t,"['a', 'b']");
-
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("code: %d\n",code);
-        printf("message: %s\n",message);
-        xpath.free(t);
-        return 0;
-    }
-    printf("%d",content);
-    xpath.free(t);
-
-}
-~~~
-
-
-- `get_array` to get an array.
-<!--codeof:exemples/get/get_array.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.new_from_file("tests/target/array.json");
-    CxpathJson *a = xpath.get_array(t, "['a','b']");
-    char  *a1 =xpath.get_str(a,"[0]");
-
-    if(errors.has_errors(t)){
-        char *message =errors.get_error_message(t);
-        int code = errors.get_error_code(t);
-        printf("code: %d\n",code);
-        printf("message: %s\n",message);
-        xpath.free(t);
-        return 0;
-    }
-    printf("%s\n",a1);
-    xpath.free(t);
-
-}
-~~~
-
-- `get_object` to get an json object.
+#### Getting a sub object
 <!--codeof:exemples/get/get_object.c-->
 ~~~c
 
@@ -378,8 +244,7 @@ int main(){
 
 }
 ~~~
-
-- `get_array` to get an array.
+#### Getting a sub array
 <!--codeof:exemples/get/get_array.c-->
 ~~~c
 
@@ -412,6 +277,7 @@ int main(){
 }
 ~~~
 
+#### Getting size 
 - `size` to get the size of an array.
 <!--codeof:exemples/get/get_size.c-->
 ~~~c
@@ -443,6 +309,44 @@ int main(){
 
 }
 ~~~
+
+### Types 
+you also can get type information about the current element 
+<!--codeof:exemples/extra/retriving_type.c-->
+~~~c
+
+#include "CxpathJson.h"
+
+
+
+CxpathJsonNamespace xpath;
+CxpathJsonErrorNamespace errors;
+
+
+int main(){
+    xpath = newCxpathJsonNamespace();
+    errors = xpath.errors;
+    CxpathJson *t = xpath.new_from_file("tests/target/str.json");
+
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("code: %d\n",code);
+        printf("message: %s\n",message);
+        xpath.free(t);
+        return 0;
+    }
+    printf("exist :%d\n" , xpath.types.exist(t,"['a','b']"));
+    printf("type code:%d\n" , xpath.types.type(t,"['a','b']"));
+    printf("type str:%s\n" , xpath.types.type_str(t,"['a','b']"));
+
+    xpath.free(t);
+
+}
+~~~
+
+
 
 
 ### Set

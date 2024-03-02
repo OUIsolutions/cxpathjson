@@ -1,5 +1,5 @@
 
-#include "src/one.c"
+#include "../../../CxpathJson.h"
 
 
 CxpathJsonNamespace xpath;
@@ -9,7 +9,6 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    xpath.new_from_file
     CxpathJson *t = xpath.newJsonObject();
     xpath.set_str(t,"hello world","['a']");
     char *content = xpath.dump_to_string(t,true);
