@@ -173,6 +173,18 @@ int main(){
 Every `get` function gets 2 parameters: the json object and the path string. The first
 parameter is the json object and the second parameter is the path string. The path string is a list of keys separated by a comma. For example, the path string `"['a', 0, 'b']"` will get the value of the key `b` in the json string `{"a": [ {"b": 1} ]}`.
 
+**tests/target/all.json**:
+<!--codeof:tests/target/all.json-->
+~~~json
+{
+  "height": 1.79,
+  "name": "test",
+  "age": 100,
+  "maried": false
+}
+~~~
+
+
 <!--codeof:exemples/get/get_all.c-->
 ~~~c
 
