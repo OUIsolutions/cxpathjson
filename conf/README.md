@@ -78,6 +78,17 @@ parameter is the json object and the second parameter is the path string. The pa
 - `size` to get the size of an array.
 <!--codeof:exemples/get/get_size.c -->
 
+### Iterating over arrays 
+You can easly iterate over array by using **get_size** function
+
+<!--codeof:exemples/get/array_iteration.c -->
+
+### getting element array in reverse order
+if you pass a negative number (-1) for example, you can get the last element of an array 
+
+<!--codeof:exemples/get/last_one.c -->
+
+
 ### Types 
 you also can get type information about the current element 
 <!--codeof:exemples/extra/retriving_type.c -->

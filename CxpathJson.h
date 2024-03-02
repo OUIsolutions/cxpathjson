@@ -4608,7 +4608,7 @@ int CxpathJson_get_size(CxpathJson * self, const char *format, ...){
         return CXPATH_ERROR_NUM_RETURN;
     }
 
-    if(!cJSON_IsArray(result)){
+    if(!cJSON_IsArray(result) && !cJSON_IsObject(result)){
         if(self->raise_runtime_errors){
             char buffer[2000] = {0};
             vsnprintf(buffer, sizeof(buffer), format, args);
@@ -4616,14 +4616,13 @@ int CxpathJson_get_size(CxpathJson * self, const char *format, ...){
 
             cJSON *parsed_path  = cJSON_Parse(buffer);
             CxpathJson  *root = private_CxpathJson_get_root(self);
-
             CxpathJson_raise_errror(
                     root,
                     CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE,
                     parsed_path,
                     PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE,
                     private_cxpathjson_convert_json_type_to_str(result),
-                    CXPATHJSON_ARRAY
+                    CXPATHJSON_ARRAY_TEXT
 
             );
             cJSON_Delete(parsed_path);

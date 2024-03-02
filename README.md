@@ -311,6 +311,103 @@ int main(){
 }
 ~~~
 
+### Iterating over arrays 
+You can easly iterate over array by using **get_size** function
+
+<!--codeof:exemples/get/array_iteration.c-->
+~~~c
+
+#include "CxpathJson.h"
+
+
+CxpathJsonNamespace xpath;
+CxpathJsonErrorNamespace errors;
+
+
+int main(){
+    xpath = newCxpathJsonNamespace();
+    errors = xpath.errors;
+
+    CxpathJson *t = xpath.new_from_file("tests/target/all_list.json");
+    int size = xpath.size(t,"[]");
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("code: %d\n",code);
+        printf("message: %s\n",message);
+        xpath.free(t);
+        return 0;
+    }
+    for(int i = 0; i< size; i++){
+
+        char *name = xpath.get_str(t,"[%d,'name']",i);
+        int age =xpath.get_int(t,"[%d,'age']",i);
+        bool maried = xpath.get_bool(t,"[%d,'maried']",i);
+        double height = xpath.get_double(t,"[%d,'height']",i);
+
+        if(errors.has_errors(t)){
+            char *message =errors.get_error_message(t);
+            int code = errors.get_error_code(t);
+            printf("code: %d\n",code);
+            printf("message: %s\n",message);
+            xpath.free(t);
+            return 0;
+        }
+        printf("name: %s\n",name);
+        printf("age: %d\n",age);
+        printf("height: %lf\n",height);
+        printf("maried: %s\n", maried ? "true": "false");
+        printf("\n");
+    }
+
+    xpath.free(t);
+
+}
+~~~
+
+### getting element array in reverse order
+if you pass a negative number (-1) for example, you can get the last element of an array 
+
+<!--codeof:exemples/get/last_one.c-->
+~~~c
+
+#include "CxpathJson.h"
+
+
+CxpathJsonNamespace xpath;
+CxpathJsonErrorNamespace errors;
+
+
+int main(){
+    xpath = newCxpathJsonNamespace();
+    errors = xpath.errors;
+
+    CxpathJson *t = xpath.new_from_file("tests/target/all_list.json");
+    int size = xpath.size(t,"[]");
+    char *name = xpath.get_str(t,"[-1,'name']");
+    int age =xpath.get_int(t,"[-1,'age']");
+    bool maried = xpath.get_bool(t,"[-1,'maried']");
+    double height = xpath.get_double(t,"[-1,'height']");
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("code: %d\n",code);
+        printf("message: %s\n",message);
+        xpath.free(t);
+        return 0;
+    }
+
+    printf("name: %s\n",name);
+    printf("age: %d\n",age);
+    printf("height: %lf\n",height);
+    printf("maried: %s\n", maried ? "true": "false");
+    xpath.free(t);
+
+}
+~~~
+
+
 ### Types 
 you also can get type information about the current element 
 <!--codeof:exemples/extra/retriving_type.c-->

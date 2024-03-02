@@ -1,6 +1,5 @@
 
-#include "src/one.c"
-
+#include "../../../CxpathJson.h"
 
 
 CxpathJsonNamespace xpath;
