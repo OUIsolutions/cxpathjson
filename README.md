@@ -7,7 +7,7 @@ CXPathJson is a library to set and get values from a json string using a path st
 CXpathJson is made to be as dumb as possible and adopt the idea of single file library.
 For installation, simply copy the **CXpathJson.h** into your project and compile with gcc/g++ or clang. 
 
-[Download Link](https://github.com/OUIsolutions/cxpathjson/releases/download/v0.1/CxpathJson.h)
+[Download Link](https://github.com/OUIsolutions/cxpathjson/releases/download/v0.2/CxpathJson.h)
 
 ## full Folder 
 you also can download the entire **src** project and include with **src/one.c** 
