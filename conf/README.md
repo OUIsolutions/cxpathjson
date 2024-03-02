@@ -70,6 +70,7 @@ parameter is the json object and the second parameter is the path string. The pa
 
 #### Getting a sub object
 <!--codeof:exemples/get/get_object.c -->
+
 #### Getting a sub array
 <!--codeof:exemples/get/get_array.c -->
 

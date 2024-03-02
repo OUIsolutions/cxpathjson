@@ -244,6 +244,7 @@ int main(){
 
 }
 ~~~
+
 #### Getting a sub array
 <!--codeof:exemples/get/get_array.c-->
 ~~~c

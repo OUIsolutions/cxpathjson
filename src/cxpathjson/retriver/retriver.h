@@ -11,6 +11,7 @@ cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
 char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
 
+char * CxpathJson_get_key(CxpathJson * self, const char *format, ...);
 
 CxpathJson  * CxpathJson_get_object(CxpathJson * self, const char *format, ...);
 

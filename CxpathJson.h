@@ -421,7 +421,8 @@ void CxpathJson_free(CxpathJson * self);
 #define  CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE 9
 #define  CXPATHJSON_PRINT_PROBLEM_CODE 10
 #define  CXPATHJSON_IO_PROBLEM_CODE 12
-
+#define XPATH_JSON_ELEMENT_NOT_HAVE_KEY_CODE 13
+#define XPATH_JSON_ELEMENT_NOT_HAVE_KEY_MESSAGE "element does not have a key"
 
 #define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_CODE 13
 
@@ -468,6 +469,7 @@ cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);
 
 char * CxpathJson_get_str(CxpathJson * self, const char *format, ...);
 
+char * CxpathJson_get_key(CxpathJson * self, const char *format, ...);
 
 CxpathJson  * CxpathJson_get_object(CxpathJson * self, const char *format, ...);
 
@@ -635,6 +637,8 @@ typedef struct {
     int (*size)(CxpathJson * self, const char *format, ...);
     CxpathJson  * (*get_object)(CxpathJson * self, const char *format, ...);
     CxpathJson  * (*get_array)(CxpathJson * self, const char *format, ...);
+    char * (*get_key)(CxpathJson * self, const char *format, ...);
+
 
 
     void (*set_cjson_getting_ownership)(CxpathJson *self, cJSON *value, const char *format, ...);
@@ -4405,8 +4409,6 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
 }
 
 
-CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...);
-
  char * CxpathJson_get_str(CxpathJson *self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return NULL;
@@ -4444,7 +4446,37 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...);
     }
     return  result->valuestring;
 }
+char * CxpathJson_get_key(CxpathJson * self, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
 
+    va_list args;
+    va_start(args, format);
+    cJSON *result = private_CxpathJson_get_cJSON_by_vargs(self, format, args);
+    va_end(args);
+    if(CxpathJson_get_error_code(self)){
+        return NULL;
+    }
+    char *key =  result->string;
+    if(!key && self->raise_runtime_errors){
+        char buffer[2000] = {0};
+        vsnprintf(buffer, sizeof(buffer), format, args);
+        private_cxpathjson_replace_comas(buffer);
+        cJSON *parsed_path  = cJSON_Parse(buffer);
+        CxpathJson  *root = private_CxpathJson_get_root(self);
+
+        CxpathJson_raise_errror(
+                root,
+                XPATH_JSON_ELEMENT_NOT_HAVE_KEY_CODE,
+                parsed_path,
+                XPATH_JSON_ELEMENT_NOT_HAVE_KEY_MESSAGE
+        );
+        cJSON_Delete(parsed_path);
+
+    }
+    return key;
+}
 double CxpathJson_get_double(CxpathJson * self, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return CXPATH_ERROR_NUM_RETURN;
@@ -5314,6 +5346,7 @@ CxpathJsonNamespace newCxpathJsonNamespace(){
     self.get_str  = CxpathJson_get_str;
     self.get_object = CxpathJson_get_object;
     self.get_array = CxpathJson_get_array;
+    self.get_key = CxpathJson_get_key;
     self.size = CxpathJson_get_size;
 
 

@@ -23,6 +23,8 @@ typedef struct {
     int (*size)(CxpathJson * self, const char *format, ...);
     CxpathJson  * (*get_object)(CxpathJson * self, const char *format, ...);
     CxpathJson  * (*get_array)(CxpathJson * self, const char *format, ...);
+    char * (*get_key)(CxpathJson * self, const char *format, ...);
+
 
 
     void (*set_cjson_getting_ownership)(CxpathJson *self, cJSON *value, const char *format, ...);

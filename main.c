@@ -9,12 +9,18 @@ CxpathJsonErrorNamespace errors;
 int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
-    xpath.new_from_file
-    CxpathJson *t = xpath.newJsonObject();
-    xpath.set_str(t,"hello world","['a']");
-    char *content = xpath.dump_to_string(t,true);
-    printf("%s",content);
-    free(content);
+    CxpathJson *t = xpath.new_from_file("tests/target/array.json");
+    printf("%s",xpath.get_key(t,"['a','b',0]"));
+
+    if(errors.has_errors(t)){
+        char *message =errors.get_error_message(t);
+        int code = errors.get_error_code(t);
+        printf("code: %d\n",code);
+        printf("message: %s\n",message);
+        xpath.free(t);
+        return 0;
+    }
+
     xpath.free(t);
 
 
