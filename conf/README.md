@@ -89,17 +89,7 @@ you also can get type information about the current element
 Every `set` function gets 3 parameters: the json object, the value to set and the path string.
 To set a value in the json object, you can use a range of functions. The functions are:
 
-- `set_int` to set an integer.
-<!--codeof:exemples/set/set_int.c -->
-
-- `set_double` to set a double.
-<!--codeof:exemples/set/set_double.c -->
-
-- `set_str` to set a string.
-<!--codeof:exemples/set/set_str.c -->
-
-- `set_bool` to set a boolean.
-<!--codeof:exemples/set/set_bool.c -->
+<!--codeof:exemples/set/set_all.c -->
 
 
 ## Dumps

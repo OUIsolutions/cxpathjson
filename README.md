@@ -354,8 +354,7 @@ int main(){
 Every `set` function gets 3 parameters: the json object, the value to set and the path string.
 To set a value in the json object, you can use a range of functions. The functions are:
 
-- `set_int` to set an integer.
-<!--codeof:exemples/set/set_int.c-->
+<!--codeof:exemples/set/set_all.c-->
 ~~~c
 
 #include "CxpathJson.h"
@@ -369,93 +368,16 @@ int main(){
     xpath = newCxpathJsonNamespace();
     errors = xpath.errors;
     CxpathJson *t = xpath.newJsonObject();
-    xpath.set_int(t,10 ,"['a', 'b']");
+    xpath.set_str(t, "Mateus","['a', 'name']");
+    xpath.set_int(t, 27,"['a', 'age']");
+    xpath.set_double(t, 1.80,"['a', 'height']");
+    xpath.set_bool(t,true,"['a', 'maried']");
 
     char *result = xpath.dump_to_string(t, false);
     printf("%s",result);
     xpath.free(t);
     free(result);
 
-
-
-}
-~~~
-
-- `set_double` to set a double.
-<!--codeof:exemples/set/set_double.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.newJsonObject();
-    xpath.set_double(t,40 ,"['a', 'b']");
-
-    char *result = xpath.dump_to_string(t, false);
-    printf("%s",result);
-    xpath.free(t);
-    free(result);
-
-
-
-}
-~~~
-
-- `set_str` to set a string.
-<!--codeof:exemples/set/set_str.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.newJsonObject();
-    xpath.set_str(t, "Hello World","['a', 'b']");
-
-    char *result = xpath.dump_to_string(t, false);
-    printf("%s",result);
-    xpath.free(t);
-    free(result);
-
-
-
-}
-~~~
-
-- `set_bool` to set a boolean.
-<!--codeof:exemples/set/set_bool.c-->
-~~~c
-
-#include "CxpathJson.h"
-
-
-CxpathJsonNamespace xpath;
-CxpathJsonErrorNamespace errors;
-
-
-int main(){
-    xpath = newCxpathJsonNamespace();
-    errors = xpath.errors;
-    CxpathJson *t = xpath.newJsonObject();
-    xpath.set_bool(t,true ,"['a', 'b']");
-
-    char *result = xpath.dump_to_string(t, false);
-    printf("%s",result);
-    xpath.free(t);
-    free(result);
 
 
 }
