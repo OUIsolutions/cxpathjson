@@ -13,6 +13,7 @@ CxpathJsonTypeNamespace newCxpathJsonTypeNamespace(void){
     self.exist = CxpathJson_exist;
     self.type = CxpathJson_type;
     self.its_not_null = CxpathJson_its_not_null;
+    self.its_iterable = CxpathJson_its_iterable;
     self.type_str = CxpathJson_type_str;
     return self;
 }

@@ -21,6 +21,8 @@ typedef struct{
     int (*type)(CxpathJson * self, const char *format, ...);
     bool (*exist)(CxpathJson * self, const char *format, ...);
     bool (*its_not_null)(CxpathJson * self, const char *format, ...);
+    bool (*its_iterable)(CxpathJson * self, const char *format, ...);
+
     const char * (*type_str)(CxpathJson * self, const char *format, ...);
 }CxpathJsonTypeNamespace;
 
