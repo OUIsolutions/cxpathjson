@@ -44,6 +44,33 @@ void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, cons
 }
 
 
+void CxpathJson_set_empty_array(CxpathJson *self, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateArray();
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+}
+
+
+
+void CxpathJson_set_empty_object(CxpathJson *self, const char *format, ...){
+    if(CxpathJson_get_error_code(self)){
+        return;
+    }
+
+    va_list args;
+    va_start(args, format);
+    cJSON *value_cjson = cJSON_CreateObject();
+    private_CxpathJson_set_cjson_by_va_arg_getting_ownership(self, value_cjson, format, args);
+    va_end(args);
+}
+
+
 void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const char *format, ...){
     if(CxpathJson_get_error_code(self)){
         return;

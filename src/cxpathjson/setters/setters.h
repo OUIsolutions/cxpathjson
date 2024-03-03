@@ -13,6 +13,12 @@ void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *va
 
 void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, const char *format, ...);
 
+
+void CxpathJson_set_empty_array(CxpathJson *self, const char *format, ...);
+
+void CxpathJson_set_empty_object(CxpathJson *self, const char *format, ...);
+
+
 void CxpathJson_set_str(CxpathJson *self, const char *value, const char *format, ...);
 
 void CxpathJson_set_str_getting_ownership(CxpathJson *self,  char *value, const char *format, ...);

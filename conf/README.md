@@ -134,6 +134,13 @@ To set a value in the json object, you can use a range of functions. The functio
 
 <!--codeof:exemples/set/set_all.c -->
 
+### Append 
+You alson can append elements into the array by using the **$append** key world in the middle of the path
+in these case, in the first set we use the  **$append**, to indicate the library that its to append 
+a new object there
+
+<!--codeof:exemples/extra/append.c -->
+
 
 ## Dumps
 You can dump the json object to a file using `dump_to_file` or to a string using `dump_to_string`.

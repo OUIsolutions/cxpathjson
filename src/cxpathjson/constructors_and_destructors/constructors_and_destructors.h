@@ -1,6 +1,6 @@
 
 
-CxpathJson * private_newCxpathJson();
+CxpathJson * private_newCxpathJson(void);
 
 CxpathJson * private_CxpathJson_get_root(CxpathJson *self);
 
@@ -9,9 +9,9 @@ CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element
 
 CxpathJson * newCxpathJson_from_cJSON_getting_ownership(cJSON *element);
 
-CxpathJson * newCxpathJsonObject();
+CxpathJson * newCxpathJsonObject(void);
 
-CxpathJson * newCxpathJsonArray();
+CxpathJson * newCxpathJsonArray(void);
 
 CxpathJson * newCxpathJson_from_string( const char *data);
 
