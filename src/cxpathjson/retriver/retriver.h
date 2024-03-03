@@ -1,9 +1,8 @@
 
 
-cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *path_list);
+cJSON * private_CxpathJson_get_cJSON_by_path_list(CxpathJson * self, cJSON *path_list);
 
 
-cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *format, va_list args);
 
 
 cJSON * CxpathJson_get_cJSON(CxpathJson * self, const char *format, ...);

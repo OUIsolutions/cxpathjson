@@ -30,7 +30,7 @@ void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
     }
     bool old_raise = self->raise_runtime_errors;
     self->raise_runtime_errors = false;
-    cJSON *possible_element = private_CxpathJson_cJSON_by_cjson_path_list(self,parsed_path);
+    cJSON *possible_element = private_CxpathJson_get_cJSON_by_path_list(self, parsed_path);
     self->raise_runtime_errors = old_raise;
     if(!possible_element){
         cJSON_Delete(parsed_path);
@@ -45,7 +45,7 @@ void CxpathJson_destroy(CxpathJson *self,const char *format, ...){
         cJSON *element = cJSON_GetArrayItem(parsed_path,i);
         cJSON_AddItemReferenceToArray(rest,element);
     }
-    cJSON *father = private_CxpathJson_cJSON_by_cjson_path_list(self,rest);
+    cJSON *father = private_CxpathJson_get_cJSON_by_path_list(self, rest);
     cJSON_Delete(rest);
 
     cJSON *last = cJSON_GetArrayItem(parsed_path,path_size -1);

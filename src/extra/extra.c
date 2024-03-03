@@ -16,3 +16,15 @@ bool private_cxpathjson_path_is_append(cJSON *current_path){
     return is_append;
 
 }
+
+void private_cxpathjson_replace_comas(char *result){
+    long size = strlen(result);
+    for(int i =1; i < size; i++){
+        char current_char = result[i];
+        char last_char = result[i-1];
+
+        if(current_char == '\'' && last_char !='\\'){
+            result[i] = '"';
+        }
+    }
+}

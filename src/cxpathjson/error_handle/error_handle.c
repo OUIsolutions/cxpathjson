@@ -6,7 +6,7 @@ void CxpathJson_raise_errror(CxpathJson * self, int error_code, cJSON *path, con
     self->error_code = error_code;
     if(path){
         self->error_path_str = cJSON_PrintUnformatted(path);
-        self->path_list = cJSON_Duplicate(path, true);
+        self->path_list = path;
     }
 
     va_list args;

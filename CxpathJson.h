@@ -458,7 +458,7 @@ void CxpathJson_clear_errors(CxpathJson * self);
 
 
 
-cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *path_list);
+cJSON * private_CxpathJson_get_cJSON_by_path_list(CxpathJson * self, cJSON *path_list);
 
 
 cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *format, va_list args);
@@ -4205,7 +4205,7 @@ char * CxpathJson_get_error_path(CxpathJson * self){
 }
 
 
-cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *path_list){
+cJSON * private_CxpathJson_get_cJSON_by_path_list(CxpathJson * self, cJSON *path_list){
     if(CxpathJson_get_error_code(self)){
         return NULL;
     }

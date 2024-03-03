@@ -1,6 +1,6 @@
 
-cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *path_list){
-    if(CxpathJson_get_error_code(self)){
+cJSON * private_CxpathJson_get_cJSON_by_path_list(CxpathJson * self, cJSON *path_list){
+    if(CxpathJson_has_errors(self)){
         return NULL;
     }
 
@@ -88,30 +88,3 @@ cJSON * private_CxpathJson_cJSON_by_cjson_path_list(CxpathJson * self, cJSON *pa
     return current_element;
 }
 
-cJSON * private_CxpathJson_get_cJSON_by_vargs(CxpathJson * self, const char *format, va_list args){
-    if(CxpathJson_get_error_code(self)){
-        return NULL;
-    }
-    char buffer[2000] = {0};
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    private_cxpathjson_replace_comas(buffer);
-    cJSON *parsed_path  = cJSON_Parse(buffer);
-
-    if(private_cxpathjson_validate_path_read_only(parsed_path)){
-        //we raise here beacause bad formatting its consider a comptime error
-        CxpathJson  *root = private_CxpathJson_get_root(self);
-        CxpathJson_raise_errror(root,
-                                CXPATHJSON_ARG_PATH_NOT_VALID_CODE,
-                                NULL,
-                                PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE,
-                                buffer
-        );
-
-        cJSON_Delete(parsed_path);
-        return  NULL;
-    }
-    cJSON *result = private_CxpathJson_cJSON_by_cjson_path_list(self, parsed_path);
-    cJSON_Delete(parsed_path);
-    return result;
-
-}

@@ -12,16 +12,15 @@
 
 #define  CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_CODE 8
 #define  CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_CODE 9
-#define  CXPATHJSON_PRINT_PROBLEM_CODE 10
 #define  CXPATHJSON_IO_PROBLEM_CODE 12
 #define XPATH_JSON_ELEMENT_NOT_HAVE_KEY_CODE 13
 #define XPATH_JSON_ELEMENT_NOT_HAVE_KEY_MESSAGE "element does not have a key"
 
-#define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_CODE 13
 
 #define  PRIVATE_CXPATHJSON_FILE_NOT_FOUND_MESSAGE "file %s  not exist"
-#define PRIVATE_CPATHJSON_ON_PATH_FORMAT "%s on path %s"
 #define PRIVATE_CXPATHJSON_ARG_PATH_NOT_VALID_MESSAGE "path %s its not well formated"
+#define PRIVATE_CXPATHJSON_APPEND_NOT_VALID_ON_READ_ONLY_FUNCTION_MESSAGE  \
+"append its not valid on read only function on path %s"
 
 #define  PRIVATE_CXPATHJSON_ELEMENT_HAS_WRONG_TYPE_MESSAGE "element has type %s instead of %s"
 #define  PRIVATE_CXPATHJSON_MIDDLE_ELEMENT_ITS_NOT_ARRAY_MESSAGE "middle element  its not array"
@@ -31,7 +30,6 @@
 #define  PRIVATE_CXPATHJSON_STRING_NOT_PARSABLE_MESSAGE "string %s its not a valid json"
 #define CXPATHJSON_IO_PROBLEM_MESSAGE "impossible to write in %s"
 
-#define  CJSON_PATH_APPEND_ITS_NOT_VALID_ON_READ_OPERATIONS_MESSAGE "Append its not valid on read operations"
 
 int CxpathJson_get_error_code(CxpathJson * self);
 

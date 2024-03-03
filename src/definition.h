@@ -9,5 +9,4 @@
 #include "json_types/json_types.c"
 #include "cxpathjson/definition.h"
 #include "extra/extra.c"
-#include "path_format/path_format.c"
 #include "namespace/definition.h"
