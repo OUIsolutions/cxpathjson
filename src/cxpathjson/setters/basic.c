@@ -2,10 +2,12 @@
 void private_cxpathjson_set_cjson_by_path_list_getting_ownership(CxpathJson *self, cJSON *value, cJSON *path_list) {
 
     if(CxpathJson_get_error_code(self)){
+        cJSON_Delete(value);
         return;
     }
 
     if(private_CxpathJson_verifiy_if_insertion_is_possible(self, path_list)){
+        cJSON_Delete(value);
         return;
     }
 
