@@ -51,7 +51,6 @@ CxpathJson  * CxpathJson_get_object(CxpathJson * self, const char *format, ...){
                     private_cxpathjson_convert_json_type_to_str(result),
                     CXPATHJSON_OBJECT_TEXT
             );
-            return  NULL;
 
         }
 
@@ -93,7 +92,6 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
                     private_cxpathjson_convert_json_type_to_str(result),
                     CXPATHJSON_ARRAY_TEXT
             );
-            return  NULL;
         }
 
         cJSON_Delete(path_list);
@@ -136,7 +134,6 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
                     private_cxpathjson_convert_json_type_to_str(result),
                     CXPATHJSON_STRING_TEXT
             );
-            return  NULL;
 
         }
         cJSON_Delete(path_list);
@@ -177,7 +174,6 @@ char * CxpathJson_get_key(CxpathJson * self, const char *format, ...){
                 path_list,
                 XPATH_JSON_ELEMENT_NOT_HAVE_KEY_MESSAGE
         );
-        return  NULL;
     }
 
     cJSON_Delete(path_list);
@@ -338,7 +334,6 @@ int CxpathJson_get_size(CxpathJson * self, const char *format, ...){
                     CXPATHJSON_ARRAY_TEXT
 
             );
-            return CXPATH_ERROR_NUM_RETURN;
         }
 
         cJSON_Delete(path_list);
