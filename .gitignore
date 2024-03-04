@@ -2,6 +2,7 @@
 *.d
 teste_sub_objetos.c
 # Object files
+main.c
 *.o
 *.ko
 *.obj
