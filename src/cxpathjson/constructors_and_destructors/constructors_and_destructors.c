@@ -83,7 +83,7 @@ void CxpathJson_free(CxpathJson * self){
     //means its root element
     if(!self->private_root){
         CxpathJson_clear_errors(self);
-        if(self->element){
+        if(self->element && !self->element_reference){
             cJSON_Delete(self->element);
         }
     }

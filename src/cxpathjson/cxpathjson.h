@@ -3,6 +3,7 @@
 typedef struct CxpathJson{
 
     cJSON * element;
+    bool element_reference;
     bool raise_runtime_errors;
     char *error_message;
     cJSON *path_list;

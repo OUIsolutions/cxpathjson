@@ -337,6 +337,7 @@ const char * private_cxpathjson_convert_json_type_to_str(cJSON *element);
 typedef struct CxpathJson{
 
     cJSON * element;
+    bool element_reference;
     bool raise_runtime_errors;
     char *error_message;
     cJSON *path_list;
@@ -4228,7 +4229,7 @@ void CxpathJson_free(CxpathJson * self){
     //means its root element
     if(!self->private_root){
         CxpathJson_clear_errors(self);
-        if(self->element){
+        if(self->element && !self->element_reference){
             cJSON_Delete(self->element);
         }
     }
