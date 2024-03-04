@@ -404,6 +404,7 @@ CxpathJson * private_CxpathJson_get_root(CxpathJson *self);
 
 CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element);
 
+CxpathJson * newCxpathJson_from_cJSON_by_reference(cJSON *element);
 
 CxpathJson * newCxpathJson_from_cJSON_getting_ownership(cJSON *element);
 
@@ -630,8 +631,8 @@ typedef struct {
 
     char *(*dump_to_string)(CxpathJson  *self, bool ident);
     void (*dump_to_file)(CxpathJson  *self,const char *filename, bool ident);
-    
 
+    CxpathJson * (*new_from_cJSON_by_reference)(cJSON *element);
     CxpathJson * (*new_from_cJSON)(cJSON *element);
     CxpathJson * (*newJsonObject)(void);
     CxpathJson * (*newJsonArray)(void);
@@ -4173,6 +4174,12 @@ CxpathJson * private_CxpathJson_construct_child(CxpathJson  *self,cJSON *element
     return created;
 }
 
+CxpathJson * newCxpathJson_from_cJSON_by_reference(cJSON *element){
+    CxpathJson  *self = private_newCxpathJson();
+    self->element_reference = true;
+    self->element = element;
+    return  self;
+}
 
 CxpathJson * newCxpathJson_from_cJSON_getting_ownership(cJSON *element){
     CxpathJson  *self = private_newCxpathJson();
@@ -5529,6 +5536,7 @@ CxpathJsonTypeNamespace newCxpathJsonTypeNamespace(void){
 CxpathJsonNamespace newCxpathJsonNamespace(){
     CxpathJsonNamespace self;
 
+    self.new_from_cJSON_by_reference = newCxpathJson_from_cJSON_by_reference;
     self.dump_to_file =CxpathJson_dump_to_file;
     self.dump_to_string = CxpathJson_dump_to_string;
     self.new_from_cJSON = newCxpathJson_from_cJSON_getting_ownership;

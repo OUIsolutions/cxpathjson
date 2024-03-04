@@ -6,8 +6,8 @@ typedef struct {
 
     char *(*dump_to_string)(CxpathJson  *self, bool ident);
     void (*dump_to_file)(CxpathJson  *self,const char *filename, bool ident);
-    
 
+    CxpathJson * (*new_from_cJSON_by_reference)(cJSON *element);
     CxpathJson * (*new_from_cJSON)(cJSON *element);
     CxpathJson * (*newJsonObject)(void);
     CxpathJson * (*newJsonArray)(void);
