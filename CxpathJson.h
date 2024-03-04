@@ -4926,9 +4926,11 @@ void CxpathJson_set_xpathJson_getting_onwership(CxpathJson *self, CxpathJson *va
         CxpathJson_free(value);
         return ;
     }
+
     private_cxpathjson_set_cjson_by_path_list_getting_ownership(self, value->element,path_list);
     value->element = NULL;
-     CxpathJson_free(value);
+    cJSON_Delete(path_list);
+    CxpathJson_free(value);
 }
 
 void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, const char *format, ...){
