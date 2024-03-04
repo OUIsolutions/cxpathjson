@@ -284,7 +284,7 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
         return false;
     }
 
-    if(!cJSON_IsNumber(result)){
+    if(!cJSON_IsBool(result)){
         if(self->raise_runtime_errors){
 
             CxpathJson  *root = private_CxpathJson_get_root(self);

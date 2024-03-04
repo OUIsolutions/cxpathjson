@@ -52,7 +52,7 @@ void CxpathJson_set_xpath_by_reference(CxpathJson *self, CxpathJson *value, cons
         return ;
     }
 
-    
+
     cJSON *copy = cJSON_Duplicate(value->element,true);
     private_cxpathjson_set_cjson_by_path_list_getting_ownership(self, copy, path_list);
     cJSON_Delete(path_list);
