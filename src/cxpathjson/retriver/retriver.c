@@ -142,6 +142,7 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
         cJSON_Delete(path_list);
         return  NULL;
     }
+     cJSON_Delete(path_list);
     return  result->valuestring;
 }
 char * CxpathJson_get_key(CxpathJson * self, const char *format, ...){

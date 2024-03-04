@@ -4552,6 +4552,7 @@ CxpathJson  * CxpathJson_get_array(CxpathJson * self, const char *format, ...){
         cJSON_Delete(path_list);
         return  NULL;
     }
+     cJSON_Delete(path_list);
     return  result->valuestring;
 }
 char * CxpathJson_get_key(CxpathJson * self, const char *format, ...){
@@ -4694,7 +4695,7 @@ bool CxpathJson_get_bool(CxpathJson * self, const char *format, ...){
         return false;
     }
 
-    if(!cJSON_IsNumber(result)){
+    if(!cJSON_IsBool(result)){
         if(self->raise_runtime_errors){
 
             CxpathJson  *root = private_CxpathJson_get_root(self);
